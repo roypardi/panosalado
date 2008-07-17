@@ -137,23 +137,17 @@ package
 			stage.frameRate = 60;
 			stage.quality = StageQuality.MEDIUM
 			
-			loadMeter.graphics.beginFill(0xFFFFFF);
-			loadMeter.graphics.drawRect(0,0,stage.stageWidth,3);
-			loadMeter.graphics.endFill();
+			//loadMeter.graphics.beginFill(0xFFFFFF);
+			//loadMeter.graphics.drawRect(0,0,stage.stageWidth,3);
+			//loadMeter.graphics.endFill();
 			//loadMeter.scaleX = 0;
-			addChild(loadMeter);
+			//addChild(loadMeter);
 		}
 		
 		private function onXMLLoaded(e:Event):void
 		{
 			settings = XML(e.target.data);
 			
-// 			cameraController = new CameraController
-// 			( 
-// 				root, 
-// 				getBooleanInXML(settings.@autorotator, true), 
-// 				getNumberInXML(settings.@autorotatorDelay, 15000) 
-// 			);
 			initCameraController( getBooleanInXML(settings.@autorotator, true), getNumberInXML(settings.@autorotatorDelay, 15000) );
 
 			sensitivity = 		getNumberInXML(settings.@cameraSensitivity, 	60);
@@ -161,12 +155,6 @@ package
 			threshold = 		getNumberInXML(settings.@cameraThreshold, 		0.0001);
 			keyIncrement = 	getNumberInXML(settings.@keyIncrement, 			75);
 			zoomIncrement = 	getNumberInXML(settings.@zoomIncrement, 		0.2);
-			
-//			this.addEventListener(CameraControllerEvent.DECELERATING, changeQuality, false, 0, true);
-//			this.addEventListener(CameraControllerEvent.ACCELERATING, changeQuality, false, 0, true);
-//			this.addEventListener(CameraControllerEvent.STOPPED, changeQuality, false, 0, true);
-//			this.addEventListener(CameraControllerEvent.MOVING, moveCamera, false, 0, true);
-//			this.addEventListener(CameraControllerEvent.AUTOROTATING, autorotate, false, 0, true);
 			
 			refresh();
 			
@@ -711,6 +699,8 @@ package
 		
 		private function doRender(e:Event=null):void
 		{
+			/* Check if any of the camera control flags are set and if so move the camera
+			*/
 			if (mouseIsDown || keyIsDown)
 			{
 				if (keyIsDown)
@@ -721,14 +711,12 @@ package
 					if ( right ) { startPoint.x = stage.mouseX - keyIncrement, startPoint.y = stage.mouseY ; }
 					if ( zoomin ) 
 					{ 
-						//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, zoomIncrement) );
 						moveCamera(0, 0, zoomIncrement);
 						
 						stopped = false;
 					}
 					if ( zoomout ) 
 					{ 
-						//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, -zoomIncrement) );
 						moveCamera(0, 0, -zoomIncrement);
 						
 						stopped = false;
@@ -747,7 +735,6 @@ package
 				deltaPan = (deltaPan * (1 - friction) );
 				deltaTilt = (deltaTilt * (1 - friction) );
 				
-				//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
 				moveCamera( deltaPan, deltaTilt, 0);
 				
 				stopped = false;
@@ -760,12 +747,8 @@ package
 					deltaPan = 0;
 					deltaTilt = 0;
 					
-					//removeEventListener( Event.ENTER_FRAME,enterFrameEvent );
-					
-					//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
 					moveCamera(deltaPan, deltaTilt, 0)
 					
-					//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.STOPPED) );
 					changeQuality("stopped");
 					
 					if (_autorotatorOn)
@@ -780,7 +763,7 @@ package
 			
 			
 			
-			
+			// check if anything has set the _worldDirty flag and if so render
 			if ( _worldDirty )
 			{
 				for (var i:int = 0; i < spaces.length; i++)
@@ -1048,9 +1031,14 @@ package
 			
 			spaces[idx]["name"] = currentSpace;
 			
-			var stats:StatsView = new StatsView( spaces[idx]["renderer"] );
-			spaces[idx]["stats"] = stats;
-			viewport.addChild(stats);
+			if ( getBooleanInXML(settings.@statistics, false) )
+			{
+				var stats:StatsView = new StatsView( spaces[idx]["renderer"] );
+			
+				spaces[idx]["stats"] = stats;
+			
+				viewport.addChild(stats);
+			}
 			
 			return idx;
 		}
@@ -1145,9 +1133,6 @@ package
 				
 				startPoint = new Point( mouseX,mouseY );
 				
-				//addEventListener( Event.ENTER_FRAME,enterFrameEvent, false, 0, true );
-				
-				//dispatchEvent(new CameraControllerEvent(CameraControllerEvent.ACCELERATING) );
 				changeQuality("accelerating");
 				
 				stopAutorotatorNow();
@@ -1194,9 +1179,6 @@ package
 			
 			keyIsDown = true;
 			
-			//addEventListener( Event.ENTER_FRAME,enterFrameEvent, false, 0, true );
-			
-			//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.ACCELERATING) );
 			changeQuality("accelerating");
 		}
 		
@@ -1205,7 +1187,6 @@ package
 		{
 			mouseIsDown = false;
 			
-			//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.DECELERATING) );
 			changeQuality("decelerating");
 		}
 		
@@ -1239,66 +1220,9 @@ package
 			{
 				keyIsDown = false;
 				
-				//dispatchEvent(new CameraControllerEvent(CameraControllerEvent.DECELERATING) );
 				changeQuality("decelerating");
 			}
 		}
-		
-// 		protected function enterFrameEvent( event:Event ):void
-// 		{
-// 			// while mouse is down we calculate new velocities, when it is up we just slow with friction
-// 			if (mouseIsDown || keyIsDown)
-// 			{
-// 				if (keyIsDown)
-// 				{
-// 					if ( up ) { startPoint.x = stage.mouseX, startPoint.y = stage.mouseY + keyIncrement ; }
-// 					if ( down ) { startPoint.x = stage.mouseX, startPoint.y = stage.mouseY - keyIncrement ; }
-// 					if ( left) { startPoint.x = stage.mouseX + keyIncrement, startPoint.y = stage.mouseY ; }
-// 					if ( right ) { startPoint.x = stage.mouseX - keyIncrement, startPoint.y = stage.mouseY ; }
-// 					if ( zoomin ) 
-// 					{ 
-// 						dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, zoomIncrement) );
-// 					}
-// 					if ( zoomout ) 
-// 					{ 
-// 						dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, -zoomIncrement) );
-// 					}
-// 				}
-// 				if (mouseIsDown || up || down || left || right)
-// 				{
-// 					// calculate new position changes
-// 					deltaPan = (deltaPan - (((startPoint.x - stage.mouseX) * sensitivity) * 0.00006));
-// 					deltaTilt = (deltaTilt + (((startPoint.y - stage.mouseY) * sensitivity) * 0.00006));
-// 				}
-// 			}
-// 			// motion is still over the threshold, so apply friction
-// 			if ( ( (deltaPan * deltaPan) + (deltaTilt * deltaTilt) ) > threshold ) {
-// 				// always apply friction so that motion slows AFTER mouse is up
-// 				deltaPan = (deltaPan * (1 - friction) );
-// 				deltaTilt = (deltaTilt * (1 - friction) );
-// 				
-// 				dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
-// 			} 
-// 			else 
-// 			{ // motion is under threshold stop camera motion
-// 				if ( !mouseIsDown && !keyIsDown )
-// 				{	
-// 					// motion is under threshold, stop and remove enter frame listener
-// 					deltaPan = 0;
-// 					deltaTilt = 0;
-// 					
-// 					//removeEventListener( Event.ENTER_FRAME,enterFrameEvent );
-// 					
-// 					//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
-// 					
-// 					dispatchEvent( new CameraControllerEvent(CameraControllerEvent.STOPPED) );
-// 					
-// 					if (_autorotatorOn)
-// 						restartAutorotatorTimer();
-// 				
-// 				}
-// 			}	
-// 		}
 		
 		public function set autorotatorDelay(autorotatorDelay:Number):void
 		{
@@ -1336,21 +1260,12 @@ package
 				autorotatorTimer.stop();
 				autorotatorTimer.reset();
 			}
-			
-			//addEventListener( Event.ENTER_FRAME,autorotatorEnterFrameEventHandler, false, 1, true );
-			
+						
 			isAutorotating = true;
 		}
 		
-// 		private function autorotatorEnterFrameEventHandler(e:Event):void
-// 		{
-// 			//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.AUTOROTATING, 0, 0, 0) );
-// 			autorotate();
-// 		}
-		
 		public function stopAutorotatorNow():void
 		{
-			//removeEventListener( Event.ENTER_FRAME,autorotatorEnterFrameEventHandler );
 			if (autorotatorTimer)
 			{
 				autorotatorTimer.stop();
