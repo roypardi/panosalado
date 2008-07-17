@@ -1063,16 +1063,18 @@ package
 			for (var i:int = 0; i < spaces.length; i++)
 			{
 				var objs:Array = spaces[i]["scene"].objects as Array;
-				var num:int = objsToChange.length;
+				var num:int = objs.length;
 				for ( var j:int=0; j < num; j++ )
 				{
 					var obj:DisplayObject3D = DisplayObject3D(objs[ j ]);
 					
 					if (obj.name == name) 
+					{
 						return obj;
+					}
 				}
 			}
-			return null;
+			return obj;
 		}
 		
 		
