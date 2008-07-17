@@ -17,9 +17,13 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.geom.Rectangle;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	import flash.geom.Point;
+
 	
-	import zephyr.cameracontrol.CameraController;
-	import zephyr.cameracontrol.CameraControllerEvent;
+//	import zephyr.cameracontrol.CameraController;
+//	import zephyr.cameracontrol.CameraControllerEvent;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
@@ -45,6 +49,7 @@ package
 	import org.papervision3d.events.RendererEvent;
 	import org.papervision3d.core.render.data.RenderStatistics;
 	import org.papervision3d.core.math.Number3D;
+	import org.papervision3d.view.layer.ViewportBaseLayer;
 	
 	//import gs.TweenFilterLite;
 	import gs.TweenLite;
@@ -77,7 +82,7 @@ package
 		
 		public var viewports:Sprite = new Sprite();
 		
-		public var cameraController:CameraController;
+		//public var cameraController:CameraController;
 		
 		public var currentSpace:String = "";
 		
@@ -91,7 +96,7 @@ package
 		
 		public var settings : XML;
 		
-		public var loadMeter:Sprite = new Sprite();
+//		public var loadMeter:Sprite = new Sprite();
 		
 		public var resizeDict:Object = new Object();
 		
@@ -112,7 +117,7 @@ package
 			//set up bulk loader
 			bulkLoader = new BulkLoader("bulkLoader");
 			
-			bulkLoader.addEventListener(BulkProgressEvent.PROGRESS, onAllProgress, false, 0, true);
+//			bulkLoader.addEventListener(BulkProgressEvent.PROGRESS, onAllProgress, false, 0, true);
 			bulkLoader.addEventListener(BulkLoader.COMPLETE, onAllLoaded, false, 0, true);
 			
 			addChild(ui);
@@ -143,24 +148,25 @@ package
 		{
 			settings = XML(e.target.data);
 			
-			cameraController = new CameraController
-			( 
-				root, 
-				getBooleanInXML(settings.@autorotator, true), 
-				getNumberInXML(settings.@autorotatorDelay, 15000) 
-			);
+// 			cameraController = new CameraController
+// 			( 
+// 				root, 
+// 				getBooleanInXML(settings.@autorotator, true), 
+// 				getNumberInXML(settings.@autorotatorDelay, 15000) 
+// 			);
+			initCameraController( getBooleanInXML(settings.@autorotator, true), getNumberInXML(settings.@autorotatorDelay, 15000) );
 
-			cameraController.sensitivity = 		getNumberInXML(settings.@cameraSensitivity, 	60);
-			cameraController.friction = 		getNumberInXML(settings.@cameraFriction, 		0.3);
-			cameraController.threshold = 		getNumberInXML(settings.@cameraThreshold, 		0.0001);
-			cameraController.keyIncrement = 	getNumberInXML(settings.@keyIncrement, 			75);
-			cameraController.zoomIncrement = 	getNumberInXML(settings.@zoomIncrement, 		0.2);
+			sensitivity = 		getNumberInXML(settings.@cameraSensitivity, 	60);
+			friction = 		getNumberInXML(settings.@cameraFriction, 		0.3);
+			threshold = 		getNumberInXML(settings.@cameraThreshold, 		0.0001);
+			keyIncrement = 	getNumberInXML(settings.@keyIncrement, 			75);
+			zoomIncrement = 	getNumberInXML(settings.@zoomIncrement, 		0.2);
 			
-			cameraController.addEventListener(CameraControllerEvent.DECELERATING, changeQuality, false, 0, true);
-			cameraController.addEventListener(CameraControllerEvent.ACCELERATING, changeQuality, false, 0, true);
-			cameraController.addEventListener(CameraControllerEvent.STOPPED, changeQuality, false, 0, true);
-			cameraController.addEventListener(CameraControllerEvent.MOVING, moveCamera, false, 0, true);
-			cameraController.addEventListener(CameraControllerEvent.AUTOROTATING, autorotate, false, 0, true);
+//			this.addEventListener(CameraControllerEvent.DECELERATING, changeQuality, false, 0, true);
+//			this.addEventListener(CameraControllerEvent.ACCELERATING, changeQuality, false, 0, true);
+//			this.addEventListener(CameraControllerEvent.STOPPED, changeQuality, false, 0, true);
+//			this.addEventListener(CameraControllerEvent.MOVING, moveCamera, false, 0, true);
+//			this.addEventListener(CameraControllerEvent.AUTOROTATING, autorotate, false, 0, true);
 			
 			refresh();
 			
@@ -201,11 +207,11 @@ package
 			unclaimedMaterials[ e.target.url.url.toString() ] = bm ;
 		}
 		
-		private function onAllProgress(e : BulkProgressEvent) : void
-		{
-		 	//trace("progress event: loaded" , e.bytesLoaded," of ",  e.bytesTotal);
-		 	loadMeter.scaleX = e.weightPercent;
-		}
+// 		private function onAllProgress(e : BulkProgressEvent) : void
+// 		{
+// 		 	//trace("progress event: loaded" , e.bytesLoaded," of ",  e.bytesTotal);
+// 		 	loadMeter.scaleX = e.weightPercent;
+// 		}
 		
 		private function onAllLoaded(e : BulkProgressEvent) : void
 		{
@@ -547,7 +553,7 @@ package
 		stopPrecision:int
 		;
 		
-		private function changeQuality(e:CameraControllerEvent):void
+		private function changeQuality(type:String):void
 		{ 
 		/* change precise, smooth, and precision while moving camera for better fps
 		loops through all the scenes in all the spaces, getting all the objects from each, 
@@ -580,19 +586,19 @@ package
 							if (matToChange is BitmapMaterial)
 							{
 								bmToChange = BitmapMaterial(matToChange);
-								if (e.type == CameraControllerEvent.ACCELERATING)
+								if (type == "accelerating")
 								{
 									bmToChange.smooth = accSmooth;
 									bmToChange.precise = accPrecise;
 									bmToChange.precision = accPrecision;
 								}
-								else if (e.type == CameraControllerEvent.DECELERATING)
+								else if (type == "decelerating")
 								{
 									bmToChange.smooth = decSmooth;
 									bmToChange.precise = decPrecise;
 									bmToChange.precision = decPrecision;
 								}
-								else if (e.type == CameraControllerEvent.STOPPED)
+								else if (type == "stopped")
 								{
 									bmToChange.smooth = stopSmooth;
 									bmToChange.precise = stopPrecise;
@@ -621,10 +627,10 @@ package
 		maxZoom:Number,
 		minZoom:Number;
 		
-		private function moveCamera(e:CameraControllerEvent):void
+		private function moveCamera(dp:Number, dt:Number, dz:Number):void
 		{
-			 dp = e.deltaPan;
-			 dt = e.deltaTilt;
+			 //dp = e.deltaPan;
+			 //dt = e.deltaTilt;
 			
 			for (var i:uint=0; i < spaces.length; i++)
 			{
@@ -672,7 +678,7 @@ package
 				}
 				
 				//zoom 
-				cam.zoom += e.deltaZoom;
+				cam.zoom += dz;
 				if (cam.zoom < minZoom) { cam.zoom = minZoom }
 				if (cam.zoom > maxZoom) { cam.zoom = maxZoom }
 			}
@@ -682,7 +688,7 @@ package
 		}
 		
 		protected var da:Number;
-		private function autorotate(e:CameraControllerEvent):void
+		private function autorotate():void
 		{
 			da = getNumberInXML(settings.@autorotatorIncrement,0.25);
 			for (var i:uint=0; i < spaces.length; i++)
@@ -705,6 +711,76 @@ package
 		
 		private function doRender(e:Event=null):void
 		{
+			if (mouseIsDown || keyIsDown)
+			{
+				if (keyIsDown)
+				{
+					if ( up ) { startPoint.x = stage.mouseX, startPoint.y = stage.mouseY + keyIncrement ; }
+					if ( down ) { startPoint.x = stage.mouseX, startPoint.y = stage.mouseY - keyIncrement ; }
+					if ( left) { startPoint.x = stage.mouseX + keyIncrement, startPoint.y = stage.mouseY ; }
+					if ( right ) { startPoint.x = stage.mouseX - keyIncrement, startPoint.y = stage.mouseY ; }
+					if ( zoomin ) 
+					{ 
+						//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, zoomIncrement) );
+						moveCamera(0, 0, zoomIncrement);
+						
+						stopped = false;
+					}
+					if ( zoomout ) 
+					{ 
+						//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, -zoomIncrement) );
+						moveCamera(0, 0, -zoomIncrement);
+						
+						stopped = false;
+					}
+				}
+				if (mouseIsDown || up || down || left || right)
+				{
+					// calculate new position changes
+					deltaPan = (deltaPan - (((startPoint.x - stage.mouseX) * sensitivity) * 0.00006));
+					deltaTilt = (deltaTilt + (((startPoint.y - stage.mouseY) * sensitivity) * 0.00006));
+				}
+			}
+			// motion is still over the threshold, so apply friction
+			if ( ( (deltaPan * deltaPan) + (deltaTilt * deltaTilt) ) > threshold ) {
+				// always apply friction so that motion slows AFTER mouse is up
+				deltaPan = (deltaPan * (1 - friction) );
+				deltaTilt = (deltaTilt * (1 - friction) );
+				
+				//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
+				moveCamera( deltaPan, deltaTilt, 0);
+				
+				stopped = false;
+			} 
+			else 
+			{ // motion is under threshold stop camera motion
+				if ( !mouseIsDown && !keyIsDown && !stopped)
+				{	
+					// motion is under threshold, stop and remove enter frame listener
+					deltaPan = 0;
+					deltaTilt = 0;
+					
+					//removeEventListener( Event.ENTER_FRAME,enterFrameEvent );
+					
+					//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
+					moveCamera(deltaPan, deltaTilt, 0)
+					
+					//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.STOPPED) );
+					changeQuality("stopped");
+					
+					if (_autorotatorOn)
+						restartAutorotatorTimer();
+						
+					stopped = true;
+				
+				}
+			}
+			if (isAutorotating) autorotate();
+			
+			
+			
+			
+			
 			if ( _worldDirty )
 			{
 				for (var i:int = 0; i < spaces.length; i++)
@@ -795,13 +871,13 @@ package
 		{
 			trace("PS: toggleAutorotator");
 			
-			if (cameraController.isAutorotating)
+			if (isAutorotating)
 			{
-				cameraController.autorotatorOn = false;
+				autorotatorOn = false;
 			}
 			else
 			{
-				cameraController.startAutorotatorNow();
+				startAutorotatorNow();
 			}
 		}
 		
@@ -994,9 +1070,317 @@ package
 			return null;
 		}
 		
+		public function getDisplayObject3dByName(name:String):DisplayObject3D
+		{
+			for (var i:int = 0; i < spaces.length; i++)
+			{
+				var objs:Array = spaces[i]["scene"].objects as Array;
+				var num:int = objsToChange.length;
+				for ( var j:int=0; j < num; j++ )
+				{
+					var obj:DisplayObject3D = DisplayObject3D(objs[ j ]);
+					
+					if (obj.name == name) 
+						return obj;
+				}
+			}
+			return null;
+		}
+		
+		
+		///////////////////////////////////////////////////////////
+		// CAMERA CONTROLLER
+		
+		private var startPoint:Point;
+		
+		private var deltaPan:Number = 0;
+		private var deltaTilt:Number = 0;
+		public var sensitivity:Number = 60;
+		public var friction:Number = 0.3;
+		public var threshold:Number = 0.0001;
+		public var zoomIncrement:Number = 0.2;
+		public var keyIncrement:Number = 75;
+		
+		private var autorotatorTimer:Timer;
+		private var _autorotatorDelay:Number = 15000;
+		private var _autorotatorOn:Boolean = true;
+		
+		private var stopped:Boolean = true;
+		
+		private var mouseIsDown:Boolean = false;
+		private var keyIsDown:Boolean = false;
+		
+		public var isAutorotating:Boolean = false;
+		
+		private var up:Boolean = false;
+		private var down:Boolean = false;
+		private var left:Boolean = false;
+		private var right:Boolean = false;
+		private var zoomin:Boolean = false;
+		private var zoomout:Boolean = false;
+		
+		private function initCameraController( autorotator:Boolean = true, autorotatorDelay:Number = 15000 ):void
+		{
+			//this._parent = _parent;
+			this.autorotatorDelay = autorotatorDelay
+			stage.addEventListener( MouseEvent.MOUSE_DOWN,mouseDownEvent, false, 100, true );
+			stage.addEventListener( MouseEvent.MOUSE_UP,mouseUpEvent, false, 0, true );
+			stage.addEventListener( Event.DEACTIVATE, mouseUpEvent, false, 0, true );
+			stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDownEvent, false, 100, true );
+			stage.addEventListener( KeyboardEvent.KEY_UP, keyUpEvent, false, 0, true);
+			
+			// start the autorotator
+			_autorotatorOn = autorotator;
+			if (autorotator)
+			{
+				setUpAutorotator();
+			}
+		}
+		
+		protected function mouseDownEvent( event:MouseEvent ):void
+		{
+			if (event.target is ViewportBaseLayer)
+			{
+				mouseIsDown = true;
+				
+				startPoint = new Point( mouseX,mouseY );
+				
+				//addEventListener( Event.ENTER_FRAME,enterFrameEvent, false, 0, true );
+				
+				//dispatchEvent(new CameraControllerEvent(CameraControllerEvent.ACCELERATING) );
+				changeQuality("accelerating");
+				
+				stopAutorotatorNow();
+			}
+		}
+		
+		protected function keyDownEvent( event:KeyboardEvent ):void
+		{ 
+			switch( event.keyCode )
+			{
+			case Keyboard.UP:
+				up = true; 
+				startKeyMovement();
+			break;
+	
+			case Keyboard.DOWN:
+				down = true;
+				startKeyMovement();
+			break;
+	
+			case Keyboard.LEFT:
+				left = true;
+				startKeyMovement();
+			break;
+	
+			case Keyboard.RIGHT:
+				right = true;
+				startKeyMovement();
+			break;
+			case Keyboard.SHIFT:
+				zoomin = true;
+				startKeyMovement();
+			break;
+			case Keyboard.CONTROL:
+				zoomout = true;
+				startKeyMovement();
+			break;
+			}
+		}
+		
+		protected function startKeyMovement():void
+		{
+			stopAutorotatorNow();
+			
+			keyIsDown = true;
+			
+			//addEventListener( Event.ENTER_FRAME,enterFrameEvent, false, 0, true );
+			
+			//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.ACCELERATING) );
+			changeQuality("accelerating");
+		}
+		
+		
+		protected function mouseUpEvent( event:Event ):void
+		{
+			mouseIsDown = false;
+			
+			//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.DECELERATING) );
+			changeQuality("decelerating");
+		}
+		
+		protected function keyUpEvent(event:KeyboardEvent):void
+		{
+			switch( event.keyCode )
+				{
+				case Keyboard.UP:
+					up = false;
+				break;
+	
+				case Keyboard.DOWN:
+					down = false;
+				break;
+	
+				case Keyboard.LEFT:
+					left = false;
+				break;
+	
+				case Keyboard.RIGHT:
+					right = false;
+				break;
+				case Keyboard.SHIFT:
+					zoomin = false;
+				break;
+				case Keyboard.CONTROL:
+					zoomout = false;
+				break;
+				}
+			if ( !up && !down && !left && !right && !zoomin && !zoomout )
+			{
+				keyIsDown = false;
+				
+				//dispatchEvent(new CameraControllerEvent(CameraControllerEvent.DECELERATING) );
+				changeQuality("decelerating");
+			}
+		}
+		
+// 		protected function enterFrameEvent( event:Event ):void
+// 		{
+// 			// while mouse is down we calculate new velocities, when it is up we just slow with friction
+// 			if (mouseIsDown || keyIsDown)
+// 			{
+// 				if (keyIsDown)
+// 				{
+// 					if ( up ) { startPoint.x = stage.mouseX, startPoint.y = stage.mouseY + keyIncrement ; }
+// 					if ( down ) { startPoint.x = stage.mouseX, startPoint.y = stage.mouseY - keyIncrement ; }
+// 					if ( left) { startPoint.x = stage.mouseX + keyIncrement, startPoint.y = stage.mouseY ; }
+// 					if ( right ) { startPoint.x = stage.mouseX - keyIncrement, startPoint.y = stage.mouseY ; }
+// 					if ( zoomin ) 
+// 					{ 
+// 						dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, zoomIncrement) );
+// 					}
+// 					if ( zoomout ) 
+// 					{ 
+// 						dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, 0, 0, -zoomIncrement) );
+// 					}
+// 				}
+// 				if (mouseIsDown || up || down || left || right)
+// 				{
+// 					// calculate new position changes
+// 					deltaPan = (deltaPan - (((startPoint.x - stage.mouseX) * sensitivity) * 0.00006));
+// 					deltaTilt = (deltaTilt + (((startPoint.y - stage.mouseY) * sensitivity) * 0.00006));
+// 				}
+// 			}
+// 			// motion is still over the threshold, so apply friction
+// 			if ( ( (deltaPan * deltaPan) + (deltaTilt * deltaTilt) ) > threshold ) {
+// 				// always apply friction so that motion slows AFTER mouse is up
+// 				deltaPan = (deltaPan * (1 - friction) );
+// 				deltaTilt = (deltaTilt * (1 - friction) );
+// 				
+// 				dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
+// 			} 
+// 			else 
+// 			{ // motion is under threshold stop camera motion
+// 				if ( !mouseIsDown && !keyIsDown )
+// 				{	
+// 					// motion is under threshold, stop and remove enter frame listener
+// 					deltaPan = 0;
+// 					deltaTilt = 0;
+// 					
+// 					//removeEventListener( Event.ENTER_FRAME,enterFrameEvent );
+// 					
+// 					//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.MOVING, deltaPan, deltaTilt, 0) );
+// 					
+// 					dispatchEvent( new CameraControllerEvent(CameraControllerEvent.STOPPED) );
+// 					
+// 					if (_autorotatorOn)
+// 						restartAutorotatorTimer();
+// 				
+// 				}
+// 			}	
+// 		}
+		
+		public function set autorotatorDelay(autorotatorDelay:Number):void
+		{
+			if (autorotatorTimer != null)
+			{
+				autorotatorTimer.delay = autorotatorDelay;
+			}
+			this._autorotatorDelay = autorotatorDelay;
+		}
+		public function get autorotatorDelay():Number
+		{
+			return _autorotatorDelay;
+		}
+		
+		private function setUpAutorotator():void
+		{
+			autorotatorTimer = new Timer(autorotatorDelay);
+			autorotatorTimer.addEventListener("timer", startAutorotatorNow, false, 0, true);
+			restartAutorotatorTimer();
+		}
+		
+		public function restartAutorotatorTimer():void
+		{
+			if (_autorotatorOn)
+			{
+				stopAutorotatorNow();
+				autorotatorTimer.start();
+			}
+		}
+		
+		public function startAutorotatorNow(e:TimerEvent=null):void
+		{
+			if (autorotatorTimer)
+			{
+				autorotatorTimer.stop();
+				autorotatorTimer.reset();
+			}
+			
+			//addEventListener( Event.ENTER_FRAME,autorotatorEnterFrameEventHandler, false, 1, true );
+			
+			isAutorotating = true;
+		}
+		
+// 		private function autorotatorEnterFrameEventHandler(e:Event):void
+// 		{
+// 			//dispatchEvent( new CameraControllerEvent(CameraControllerEvent.AUTOROTATING, 0, 0, 0) );
+// 			autorotate();
+// 		}
+		
+		public function stopAutorotatorNow():void
+		{
+			//removeEventListener( Event.ENTER_FRAME,autorotatorEnterFrameEventHandler );
+			if (autorotatorTimer)
+			{
+				autorotatorTimer.stop();
+				autorotatorTimer.reset();
+			}
+			
+			isAutorotating = false;
+		}
+		
+		public function set autorotatorOn(value:Boolean):void
+		{
+			_autorotatorOn = value;
+			if (value)
+			{
+				restartAutorotatorTimer();
+			}
+			else
+			{
+				stopAutorotatorNow();
+			}
+		}
+		
+		public function get autorotatorOn():Boolean
+		{
+			return _autorotatorOn;
+		}
 		
 		
 		
+		/////////////////////////////////////////////////////
 		
 		
 		
