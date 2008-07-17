@@ -1074,7 +1074,7 @@ package
 					}
 				}
 			}
-			return obj;
+			return null;
 		}
 		
 		
