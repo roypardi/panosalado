@@ -4,6 +4,8 @@ package
 	import flash.net.*;
 	import flash.events.Event;
 	import flash.utils.Dictionary;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
 	import zephyr.utils.LayerEvent;
 	
 	public class Main extends Sprite
@@ -28,7 +30,7 @@ package
 			for each (var layer:XML in settings.* )
 			{
 				var loader:Loader = new Loader();
-				loader.load( new URLRequest( layer.@url.toString() ) );
+				loader.load( new URLRequest( layer.@url.toString() ), new LoaderContext( false, ApplicationDomain.currentDomain) );
 				loader.name = layer.@id.toString();
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, layerLoaded);
 				

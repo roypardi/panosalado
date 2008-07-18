@@ -701,6 +701,7 @@ package
 		{
 			/* Check if any of the camera control flags are set and if so move the camera
 			*/
+			
 			if (mouseIsDown || keyIsDown)
 			{
 				if (keyIsDown)
@@ -730,7 +731,8 @@ package
 				}
 			}
 			// motion is still over the threshold, so apply friction
-			if ( ( (deltaPan * deltaPan) + (deltaTilt * deltaTilt) ) > threshold ) {
+			if ( ( (deltaPan * deltaPan) + (deltaTilt * deltaTilt) ) > threshold ) 
+			{
 				// always apply friction so that motion slows AFTER mouse is up
 				deltaPan = (deltaPan * (1 - friction) );
 				deltaTilt = (deltaTilt * (1 - friction) );
@@ -1081,7 +1083,7 @@ package
 		///////////////////////////////////////////////////////////
 		// CAMERA CONTROLLER
 		
-		private var startPoint:Point;
+		private var startPoint:Point = new Point( 0,0 );
 		
 		private var deltaPan:Number = 0;
 		private var deltaTilt:Number = 0;
@@ -1133,7 +1135,8 @@ package
 			{
 				mouseIsDown = true;
 				
-				startPoint = new Point( mouseX,mouseY );
+				startPoint.x = stage.mouseX;
+				startPoint.y = stage.mouseY;
 				
 				changeQuality("accelerating");
 				
