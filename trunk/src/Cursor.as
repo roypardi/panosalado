@@ -7,6 +7,7 @@ package
 	import flash.display.*;
 	import flash.utils.Dictionary;
 	import flash.system.ApplicationDomain;
+	import zephyr.BroadcastEvent;
 	
 	public class Cursor extends Sprite
 	{
@@ -40,10 +41,12 @@ package
 			public var Cursor_L:Class;	
 		
 		private var PanoSalado:Class;
+		private var ModuleLoader:Class;
 		private var ViewportBaseLayer:Class;
 		
 		private var layerByName:Dictionary;
 		private var panoSalado:Object;
+		private var moduleLoader:Object;
 		private var buttons:Object;
 		
 		private var cursor:Bitmap;
@@ -65,6 +68,7 @@ package
 		private function layersReady(e:Event):void
 		{
 			PanoSalado = ApplicationDomain.currentDomain.getDefinition("PanoSalado") as Class;
+			ModuleLoader = ApplicationDomain.currentDomain.getDefinition("ModuleLoader") as Class;
 			ViewportBaseLayer = ApplicationDomain.currentDomain.getDefinition("org.papervision3d.view.layer.ViewportBaseLayer") as Class;
 			
 			parent.removeEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady);
@@ -72,12 +76,17 @@ package
 			layerByName = Dictionary( parent["layerByName"] );
 			panoSalado = PanoSalado( layerByName["PanoSalado"] );
 			buttons = layerByName["Interface"];
+			moduleLoader = ModuleLoader( parent );
 			
 			stage.addEventListener(MouseEvent.MOUSE_OVER, checkOver, true, 0, true);
 			stage.addEventListener(MouseEvent.MOUSE_OUT, checkOut, true, 0, true);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler, false, 0, true);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler, false, 0, true);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler, false, 0, true);
+			
+			moduleLoader.addEventListener(BroadcastEvent.SHOW_CURSOR, show, false, 0, true);
+			moduleLoader.addEventListener(BroadcastEvent.HIDE_CURSOR, hide, false, 0, true);
+			
 		}
 		
 		private var mouseIsDown:Boolean = false;
@@ -96,13 +105,13 @@ package
 				hide();
 		}
 		
-		public function show(e:Event=null):void
+		private function show(e:Event=null):void
 		{
 			Mouse.hide();
 			cursor.visible = true;
 		}
 		
-		public function hide(e:Event=null):void
+		private function hide(e:Event=null):void
 		{
 			Mouse.show();
 			cursor.visible = false;
