@@ -16,8 +16,7 @@ package zephyr.objects
 			width:Number=0, 
 			height:Number=0, 
 			segmentsW:Number=0, 
-			segmentsH:Number=0, 
-			initObject:Object=null
+			segmentsH:Number=0
 			)
 		{
 			super( material, width, height, segmentsW, segmentsH );
@@ -32,7 +31,7 @@ package zephyr.objects
 		}
 	
 		override public function set x( value:Number ):void
-		{
+		{ trace( "set x");
 			this.transform.n14 = value;
 			if (_created) this.lookAt( facingTarget );
 		}
@@ -43,7 +42,7 @@ package zephyr.objects
 		}
 	
 		override public function set y( value:Number ):void
-		{
+		{ trace( "set y");
 			this.transform.n24 = value;
 			if (_created) this.lookAt( facingTarget );
 		}
@@ -54,7 +53,7 @@ package zephyr.objects
 		}
 	
 		override public function set z( value:Number ):void
-		{
+		{ trace( "set z");
 			this.transform.n34 = value;
 			if (_created) this.lookAt( facingTarget );
 		}
