@@ -66,7 +66,7 @@ package
 	import zephyr.transitions.Bounce;
 	
 	import zephyr.objects.StageAlignedSprite;
-	import zephyr.objects.TargetFacingPlane;
+	import zephyr.objects.Hotspot;
 	
 	import org.papervision3d.view.stats.StatsView;
 
@@ -311,9 +311,9 @@ package
 			var tilt:Number = findNumberInXML("tilt", 0);
 			var zoom:Number = findNumberInXML("zoom", 12);
 			var focus:Number = findNumberInXML("focus", 100);
-			var camX:Number = findNumberInXML("cameraX", 0);
-			var camY:Number = findNumberInXML("cameraY", 0);
-			var camZ:Number = findNumberInXML("cameraZ", 0);
+			var camX:Number = findNumberInXML("cameraX", 1);
+			var camY:Number = findNumberInXML("cameraY", 1);
+			var camZ:Number = findNumberInXML("cameraZ", 1);
 			
 			// leash free or default unspecified leashing
 			if (cameraContinuity == "free" || cameraContinuity == "")
@@ -436,23 +436,24 @@ package
 			var material:BitmapMaterial = createBitmapMaterial(xml);
 			//var material:BitmapMaterial =  BitmapMaterial(unclaimedMaterials[xml.file.toString()]);
 			
-			var segments:int = getIntInXML( xml.@segments, 24 );
+			var segments:int = getIntInXML( xml.@segments, 2 );
 			
 			var pan:Number = getNumberInXML( xml.@pan, 0 );
 			
-			var tilt:Number = getNumberInXML( xml.@tilt, 0 );
+			var tilt:Number = getNumberInXML( xml.@tilt, 0 ); 
 			
 			//Plane( material:MaterialObject3D=null, width:Number=0, height:Number=0, segmentsW:Number=0, segmentsH:Number=0, initObject:Object=null )
-			//var tfp:TargetFacingPlane = new TargetFacingPlane(getSpaceByName( currentSpace )["camera"] as DisplayObject3D, material, width, height, segments, segments, pinToSphere(40000,pan,tilt) );
-			var tfp:TargetFacingPlane = new TargetFacingPlane(getSpaceByName( currentSpace )["camera"] as DisplayObject3D, material, width, height, segments, segments );
+			//var tfp:TargetFacingPlane = new TargetFacingPlane(getSpaceByName( currentSpace )["camera"] as DisplayObject3D, material, width, height, segments, segments );
+			var tfp:Hotspot = new Hotspot(pan, tilt, material, width, height, segments, segments );
 			
-			var p:Number3D = pinToSphere(40000,pan,tilt);
+// 			var p:Number3D = pinToSphere(40000,pan,tilt);
+// 			
+// 			tfp.x = p.x;
+// 			tfp.y = p.y;
+// 			tfp.z = p.z;
+// 			trace("wtf");
 			
-			tfp.x = p.x;
-			tfp.y = p.y;
-			tfp.z = p.z;
-			
-			//plane.lookAt(getSpaceByName( currentSpace )["camera"] as DisplayObject3D);
+			//tfp.lookAt( getSpaceByName(currentSpace).camera as DisplayObject3D );
 			
 			return tfp;
 			
@@ -1031,6 +1032,9 @@ package
 			spaces[idx]["scene"] = scene;
 			
 			var camera:Camera3D = new Camera3D();
+			camera.x = 0;
+			camera.y = 0;
+			camera.z = 0;
 			
 			var vp:Rectangle = new Rectangle();
 			vp.width = viewport.viewportWidth;
