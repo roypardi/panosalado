@@ -891,10 +891,17 @@ package
 			
 		}
 		
-		
+		///  This function is deprecated
 		public function loadSpaceAndInterface(name:String):void
 		{
 			trace("PS: loadSpaceAndInterface:"+name); 
+			
+			if (bulkLoader.isRunning)
+			{
+				bulkLoader.removeAll();
+				
+				currentSpace = lastSpace;
+			}
 			
 			for each (var xml:XML in settings.child( name ).children() )
 			{
@@ -924,6 +931,13 @@ package
 		{
 			trace("PS: loadSpace:"+name);
 			
+			if (bulkLoader.isRunning)
+			{
+				bulkLoader.removeAll();
+				
+				currentSpace = lastSpace;
+			}
+			
 			for each (var mat:XML in settings.child(name)..file)
 			{
 				bulkLoader.add(mat.toString(), { type:"image", weight: (mat.@weight || 10) });
@@ -946,6 +960,8 @@ package
 			if (viewports.numChildren > 1 )
 			{
 				trace("PS: removeLastSpace:"+lastSpace);
+				
+				
 				
 				viewports.removeChild( viewports.getChildByName( lastSpace ) );
 				
@@ -993,7 +1009,9 @@ package
 				spaceToRemove["stats"] = null;
 				
 				// this needs to be improved.  needs to search for the right space by name and splice it out.
-				spaces.splice(spaces.length-2, 1);
+				spaces.splice(spaces.indexOf(spaceToRemove), 1);
+				
+				//spaces.indexOf(spaceToRemove)
 				
 				spaceToRemove = null;
 				
