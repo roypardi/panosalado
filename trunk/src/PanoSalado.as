@@ -148,13 +148,7 @@ package
 		{
 			settings = XML(e.target.data);
 			
-			initCameraController( getBooleanInXML(settings.@autorotator, true), getNumberInXML(settings.@autorotatorDelay, 15000) );
-
-			sensitivity = 		getNumberInXML(settings.@cameraSensitivity, 	60);
-			friction = 		getNumberInXML(settings.@cameraFriction, 		0.3);
-			threshold = 		getNumberInXML(settings.@cameraThreshold, 		0.0001);
-			keyIncrement = 	getNumberInXML(settings.@keyIncrement, 			75);
-			zoomIncrement = 	getNumberInXML(settings.@zoomIncrement, 		0.2);
+			initCameraController( getBooleanInXML(settings.spaces.@autorotator, true), getNumberInXML(settings.spaces.@autorotatorDelay, 15000) );
 			
 			refresh();
 			
@@ -165,6 +159,12 @@ package
 		
 		private function refresh():void
 		{
+			sensitivity = 	getNumberInXML(settings.spaces.@cameraSensitivity, 	60);
+			friction = 		getNumberInXML(settings.spaces.@cameraFriction, 	0.3);
+			threshold = 	getNumberInXML(settings.spaces.@cameraThreshold, 	0.0001);
+			keyIncrement = 	getNumberInXML(settings.spaces.@keyIncrement, 		75);
+			zoomIncrement = getNumberInXML(settings.spaces.@zoomIncrement, 		0.2);
+			
 			maxTilt = findNumberInXML("maxTilt", 9999);
 			minTilt = findNumberInXML("minTilt", 9999);
 			
@@ -174,19 +174,19 @@ package
 			minZoom = findNumberInXML("minZoom", 1);
 			maxZoom = findNumberInXML("maxZoom", 25);
 			
-			accSmooth = getBooleanInXML(settings.@accelerating_smooth, false);
-			accPrecise = getBooleanInXML(settings.@accelerating_precise, false);
-			accPrecision = getIntInXML(settings.@accelerating_precision, 64);
+			accSmooth = getBooleanInXML(settings.spaces.@accelerating_smooth, false);
+			accPrecise = getBooleanInXML(settings.spaces.@accelerating_precise, false);
+			accPrecision = getIntInXML(settings.spaces.@accelerating_precision, 64);
 			
-			decSmooth = getBooleanInXML(settings.@decelerating_smooth, true);
-			decPrecise = getBooleanInXML(settings.@decelerating_precise, true);
-			decPrecision = getIntInXML(settings.@decelerating_precision, 16);
+			decSmooth = getBooleanInXML(settings.spaces.@decelerating_smooth, true);
+			decPrecise = getBooleanInXML(settings.spaces.@decelerating_precise, true);
+			decPrecision = getIntInXML(settings.spaces.@decelerating_precision, 16);
 			
-			stopSmooth = getBooleanInXML(settings.@stopped_smooth, true);
-			stopPrecise = getBooleanInXML(settings.@stopped_precise, true);
-			stopPrecision = getIntInXML(settings.@stopped_precision, 1);
+			stopSmooth = getBooleanInXML(settings.spaces.@stopped_smooth, true);
+			stopPrecise = getBooleanInXML(settings.spaces.@stopped_precise, true);
+			stopPrecision = getIntInXML(settings.spaces.@stopped_precision, 1);
 			
-			da = getNumberInXML(settings.@autorotatorIncrement,0.25);
+			da = getNumberInXML(settings.spaces.@autorotatorIncrement,0.25);
 		}
 		
 		private function onSingleItemLoaded(e:Event):void
@@ -214,7 +214,7 @@ package
 			setupCamera(thisSpace["camera"], spaces[idx-1]);
 			
 			//iterate through all the objects in the scene (pano, hotspots, etc)
-			for each (var xml:XML in settings.child( currentSpace ).children() )
+			for each (var xml:XML in findSpaceNode(currentSpace).children() )
 			{
 				var nodeName:String = xml.name().localName.toString();
 				
@@ -252,7 +252,7 @@ package
 				}
 				else 
 				{
-					ui.addChild( StageAlignedSprite(primitive) );trace("i");
+					ui.addChild( StageAlignedSprite(primitive) );
 				}
 			}
 			
@@ -427,7 +427,7 @@ package
 			return cube;
 		}
 		
-		private function targetFacingPlane(xml:XML):Object
+		private function hotspot(xml:XML):Object
 		{
 			var bmd:BitmapData = bulkLoader.getBitmapData(xml.file.toString(), false);
 			var width:Number = (2 / bmd.width ) * 40000;
@@ -617,9 +617,6 @@ package
 		
 		private function moveCamera(dp:Number, dt:Number, dz:Number):void
 		{
-			 //dp = e.deltaPan;
-			 //dt = e.deltaTilt;
-			
 			for (var i:uint=0; i < spaces.length; i++)
 			{
 				var cam:Camera3D = Camera3D(spaces[i]["camera"]);
@@ -678,7 +675,7 @@ package
 		protected var da:Number;
 		private function autorotate():void
 		{
-			da = getNumberInXML(settings.@autorotatorIncrement,0.25);
+			da = getNumberInXML(settings.camera.@autorotatorIncrement,0.25);
 			for (var i:uint=0; i < spaces.length; i++)
 			{
 				var cam:Camera3D = Camera3D(spaces[i]["camera"]);
@@ -903,7 +900,7 @@ package
 				currentSpace = lastSpace;
 			}
 			
-			for each (var xml:XML in settings.child( name ).children() )
+			for each (var xml:XML in findSpaceNode(name).children() )
 			{
 				for each (var mat:XML in xml.file)
 				{
@@ -938,8 +935,8 @@ package
 				currentSpace = lastSpace;
 			}
 			
-			for each (var mat:XML in settings.child(name)..file)
-			{
+			for each (var mat:XML in findSpaceNode(name)..file)
+			{ 
 				bulkLoader.add(mat.toString(), { type:"image", weight: (mat.@weight || 10) });
 				
 				bulkLoader.get(mat.toString()).addEventListener(Event.COMPLETE, onSingleItemLoaded, false, 100, true)
@@ -960,8 +957,6 @@ package
 			if (viewports.numChildren > 1 )
 			{
 				trace("PS: removeLastSpace:"+lastSpace);
-				
-				
 				
 				viewports.removeChild( viewports.getChildByName( lastSpace ) );
 				
@@ -1009,9 +1004,8 @@ package
 				spaceToRemove["stats"] = null;
 				
 				// this needs to be improved.  needs to search for the right space by name and splice it out.
+				// update 7/18: testing needed: this should solve the problem.
 				spaces.splice(spaces.indexOf(spaceToRemove), 1);
-				
-				//spaces.indexOf(spaceToRemove)
 				
 				spaceToRemove = null;
 				
@@ -1393,41 +1387,55 @@ package
 		}
 		
 		//search in child node first, then in settings node
+		
+		private function findSpaceNode(name:String):XML
+		{
+			var spaceNode:XML;
+			for each (spaceNode in settings.spaces.children())
+			{
+				if (spaceNode.@id == name)
+				{
+					break;
+				}
+			}
+			return spaceNode;
+		}
+		
 		private function findNumberInXML(name:String, def:Number=0):Number
 		{
-			if ( settings.child(currentSpace).attribute(name).toString().length != 0 )
+			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
 			{
-				return Number( settings.child(currentSpace).attribute(name) );
+				return Number( findSpaceNode(currentSpace).attribute(name) );
 			}
-			if ( settings.attribute(name).toString().length != 0 )
+			if ( settings.spaces.attribute(name).toString().length != 0 )
 			{
-				return Number( settings.attribute(name) );
+				return Number( settings.spaces.attribute(name) );
 			}
 			else return def;
 		}
 		private function findIntInXML(name:String, def:int=0):int
 		{
-			if ( settings.child(currentSpace).attribute(name).toString().length != 0 )
+			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
 			{
-				return int( settings.child(currentSpace).attribute(name) );
+				return int( findSpaceNode(currentSpace).attribute(name) );
 			}
-			if ( settings.attribute(name).toString().length != 0 )
+			if ( settings.spaces.attribute(name).toString().length != 0 )
 			{
-				return int( settings.attribute(name) );
+				return int( settings.spaces.attribute(name) );
 			}
 			else return def;
 		}
 		private function findBooleanInXML(name:String, def:Boolean=false):Boolean
 		{
-			if ( settings.child(currentSpace).attribute(name).toString().length != 0 )
+			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
 			{
-				if ( settings.child(currentSpace).attribute(name) == "true" ) return true;
+				if ( findSpaceNode(currentSpace).attribute(name).toString() == "true" ) return true;
 				
 				else return false;
 			}
-			if ( settings.attribute(name).toString().length != 0 )
+			if ( settings.spaces.attribute(name).toString().length != 0 )
 			{
-				if ( settings.attribute(name) == "true" ) return true;
+				if ( settings.spaces.attribute(name) == "true" ) return true;
 				
 				else return false;
 			}
@@ -1435,13 +1443,13 @@ package
 		}
 		private function findStringInXML(name:String, def:String=null):String
 		{
-			if ( settings.child(currentSpace).attribute(name).toString().length != 0 )
+			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
 			{
-				return String( settings.child(currentSpace).attribute(name) );
+				return String( findSpaceNode(currentSpace).attribute(name) );
 			}
-			if ( settings.attribute(name).toString().length != 0 )
+			if ( settings.spaces.attribute(name).toString().length != 0 )
 			{
-				return String( settings.attribute(name) );
+				return String( settings.spaces.attribute(name) );
 			}
 			else return def;
 		}
