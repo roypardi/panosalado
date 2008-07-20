@@ -176,16 +176,18 @@ package
 			minZoom = findValueInXML("cameraMinimumZoom", Number, 1);
 			maxZoom = findValueInXML("cameraMaximumZoom", Number, 50);
 			
-			accSmooth = findValueInXML("smoothOnAcceleration", Boolean, false);
-			accPrecise = findValueInXML("preciseOnAcceleration", Boolean, false);
+			dqa = findValueInXML("dynamicQualityAdjustment", Boolean, "true") ;
+			
+			accSmooth =  findValueInXML("smoothOnAcceleration", Boolean, false );
+			accPrecise =  findValueInXML("preciseOnAcceleration", Boolean, true );
 			accPrecision = findValueInXML("precisionOnAcceleration", int, 64);
 			
-			decSmooth = findValueInXML("smoothOnDeceleration", Boolean, true);
-			decPrecise = findValueInXML("precisionOnDeceleration", Boolean, true);
+			decSmooth =  findValueInXML("smoothOnDeceleration", Boolean, true );
+			decPrecise =  findValueInXML("precisionOnDeceleration", Boolean, true );
 			decPrecision = findValueInXML("precisionOnDeceleration", int, 16);
 			
-			stopSmooth = findValueInXML("smoothAtRest", Boolean, true);
-			stopPrecise = findValueInXML("preciseAtRest", Boolean, true);
+			stopSmooth =  findValueInXML("smoothAtRest", Boolean, true) ;
+			stopPrecise =  findValueInXML("preciseAtRest", Boolean, true );
 			stopPrecision = findValueInXML("precisionAtRest", int, 1);
 			
 			da = findValueInXML("autorotatorIncrement", Number, 0.25);
@@ -358,16 +360,16 @@ package
 			//var material:BitmapMaterial = new BitmapMaterial( bulkLoader.getBitmapData(xml.file.toString(), true) );
 			var material:BitmapMaterial =  unclaimedMaterials[xml.file.toString()];
 			
-			material.oneSide = Boolean( xml.@oneSide) || true ;
+			material.oneSide = stringToBoolean(xml.@oneSide) || true ;
 			
 			if ( findValueInXML("dynamicQualityAdjustment", Boolean, true) )
-			{
-				material.smooth = findValueInXML("smoothAtRest", Boolean, true) ;
+				{
+					material.smooth =  findValueInXML("smoothAtRest", Boolean, true  ) ;
+					
+					material.precise =  findValueInXML("preciseAtRest", Boolean, true  ) ;
 				
-				material.precise = findValueInXML("preciseAtRest", Boolean, true) ;
-			
-				material.precision = findValueInXML("precisionAtRest", int, 1) ;
-			}
+					material.precision = findValueInXML("precisionAtRest", int, 1) ;
+				}
 			else
 			{
 				material.smooth = stringToBoolean( xml.@smooth) || false ;
@@ -411,9 +413,9 @@ package
 				
 				if ( findValueInXML("dynamicQualityAdjustment", Boolean, true) )
 				{
-					material.smooth = findValueInXML("smoothAtRest", Boolean, true) ;
+					material.smooth =  findValueInXML("smoothAtRest", Boolean, true  ) ;
 					
-					material.precise = findValueInXML("preciseAtRest", Boolean, true) ;
+					material.precise =  findValueInXML("preciseAtRest", Boolean, true  ) ;
 				
 					material.precision = findValueInXML("precisionAtRest", int, 1) ;
 				}
@@ -453,11 +455,9 @@ package
 			
 			var height:Number = (2 / bmd.height ) * 40000;
 			
-			bmd.dispose();
-			
 			var material:BitmapMaterial = createBitmapMaterial(xml);
 			
-			var segments:int = int( xml.@segments) ||3 ;
+			var segments:int = int( xml.@segments) || 3 ;
 			
 			var pan:Number = Number( xml.@pan) || 0 ;
 			
@@ -528,6 +528,7 @@ package
 		objToChange:DisplayObject3D,
 		matToChange:MaterialObject3D,
 		bmToChange:BitmapMaterial,
+		dqa:Boolean,
 		accSmooth:Boolean,
 		accPrecise:Boolean,
 		accPrecision:int,
@@ -546,7 +547,7 @@ package
 		and then pushing either the materials from the materialsList, or the material into
 		an array, and then applies the changes to each item in the array.
 		*/
-			if ( findValueInXML(settings.@dyanmicQualityAdjustment, Boolean, true) )
+			if ( dqa )
 			{
 				for (var i:int = 0; i < spaces.length; i++)
 				{
@@ -1399,17 +1400,33 @@ package
 		
 		private function findValueInXML(name:String, ReturnClass:Class, def:*):*
 		{
+			// check the currentSpace node for the value first
 			var cs:XML = findSpaceNode(currentSpace);
 			if (cs)
 			{
 				if ( cs.attribute(name).toString().length != 0 )
-				{ 
-					return ReturnClass( cs.attribute(name) );
+				{
+					if ( ! ReturnClass is Boolean)
+					{ 
+						return ReturnClass( cs.attribute(name) );
+					}
+					else
+					{ 
+						return ReturnClass( stringToBoolean(cs.attribute(name)) );
+					}
 				}
 			}
+			// check the spaces node next
 			if ( settings.spaces.attribute(name).toString().length != 0 )
 			{ 
-				return ReturnClass( settings.spaces.attribute(name) );
+				if ( ! ReturnClass is Boolean)
+				{
+					return ReturnClass( settings.spaces.attribute(name) );
+				}
+				else
+				{
+					return ReturnClass( stringToBoolean(settings.spaces.attribute(name)) );
+				}
 			}
 			else return ReturnClass(def);
 		}
@@ -1417,7 +1434,7 @@ package
 		private function stringToBoolean(str:String):Boolean
 		{
 			var ret:Boolean;
-			(str == "true") ? ret=true : ret=false;
+			ret = (str == "true") ? true : false;
 			return ret;
 		}
 		
