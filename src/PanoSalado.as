@@ -150,7 +150,7 @@ package
 		{
 			settings = XML(e.target.data);
 			
-			initCameraController( Boolean(settings.spaces.@autorotator) || true, int(settings.spaces.@autorotatorDelay) || 15000 );
+			initCameraController( stringToBoolean(settings.spaces.@autorotator) || true, int(settings.spaces.@autorotatorDelay) || 15000 );
 			
 			refresh();
 			
@@ -270,7 +270,7 @@ package
 			
 			bulkLoader.removeAll();
 			
-			thisSpace["viewport"].interactive = findBooleanInXML("interactive", false);
+			thisSpace["viewport"].interactive = findValueInXML("interactive", Boolean, false);
 			
 			// add viewport to the displaylist
 			viewports.addChild( thisSpace["viewport"] );
@@ -279,7 +279,7 @@ package
 			XMLCodeHook("onTransitionStart");
 			
 			//Do transition and transitionEnd code hook
-			var transArr:Array = findStringInXML("transition").split(",");
+			var transArr:Array = findValueInXML("transition", String, "").split(",");
 			var time:Number = transArr[0] != null ? Number( transArr[0] ) : 3;
 			var type:String = transArr[1] != null ? transArr[1] : "alpha";
 			var val:Number = transArr[2] != null ? transArr[2] : 0;
@@ -316,14 +316,14 @@ package
 		private function setupCamera(camera:Camera3D, lastSpace:Object=null):void
 		{
 			// set up camera: 
-			var cameraContinuity:Boolean = findBooleanInXML("CameraRetainsLastValuse");
-			var pan:Number = findNumberInXML("pan", 0 );
-			var tilt:Number = findNumberInXML("tilt", 0);
-			var zoom:Number = findNumberInXML("zoom", 12);
-			var focus:Number = findNumberInXML("focus", 100);
-			var camX:Number = findNumberInXML("cameraX", 1);
-			var camY:Number = findNumberInXML("cameraY", 1);
-			var camZ:Number = findNumberInXML("cameraZ", 1);
+			var cameraContinuity:Boolean = findValueInXML("cameraRetainsLastValues", Boolean, false);
+			var pan:Number = findValueInXML("cameraPan", Number, 0 );
+			var tilt:Number = findValueInXML("cameraTilt", Number, 0);
+			var zoom:Number = findValueInXML("cameraZoom", Number, 12);
+			var focus:Number = findValueInXML("cameraFocus", Number, 100);
+			var camX:Number = findValueInXML("cameraX", Number, 0);
+			var camY:Number = findValueInXML("cameraY", Number, 0);
+			var camZ:Number = findValueInXML("cameraZ", Number, 0);
 			
 			// leash free or default unspecified leashing
 			if (!cameraContinuity)
@@ -370,9 +370,9 @@ package
 			}
 			else
 			{
-				material.smooth = Boolean( xml.@smooth) || false ;
+				material.smooth = stringToBoolean( xml.@smooth) || false ;
 					
-				material.precise = Boolean( xml.@precise) || false ;
+				material.precise = stringToBoolean( xml.@precise) || false ;
 				
 				material.precision = int( xml.@precision) || 8 ;
 			}
@@ -390,7 +390,7 @@ package
 			
 			var radius:int = int( xml.@radius ) || 50000;
 			
-			var reverse:Boolean = Boolean(xml.@reverse) || true;
+			var reverse:Boolean = stringToBoolean(xml.@reverse) || true;
 			
 			var sphere:Sphere = new Sphere(material, radius, segments, segments, reverse );
 						
@@ -409,9 +409,26 @@ package
 			{
 				var material:BitmapMaterial =  BitmapMaterial(unclaimedMaterials[file.toString()]);
 				
-				material.oneSide = Boolean( xml.@oneSide) || true ;
+				if ( findValueInXML("dynamicQualityAdjustment", Boolean, true) )
+				{
+					material.smooth = findValueInXML("smoothAtRest", Boolean, true) ;
+					
+					material.precise = findValueInXML("preciseAtRest", Boolean, true) ;
+				
+					material.precision = findValueInXML("precisionAtRest", int, 1) ;
+				}
+				else
+				{
+					material.smooth = stringToBoolean( xml.@smooth) || false ;
+						
+					material.precise = stringToBoolean( xml.@precise) || false ;
+					
+					material.precision = int( xml.@precision) || 8 ;
+				}
+				
+				material.oneSide = stringToBoolean( xml.@oneSide) || true ;
 			
-				material.interactive = Boolean( xml.@interactive) || false ;
+				material.interactive = stringToBoolean( xml.@interactive) || false ;
 				
 				materials.addMaterial( material, file.@id.toString() );
 			}
@@ -478,28 +495,27 @@ package
 			
 			sp.graphics.endFill();
 			
-			sp.scaleX = getNumberInXML(xml.@scaleX, 1);
+			sp.scaleX = Number(xml.@scaleX) || 1;
 			
-			sp.scaleY = getNumberInXML(xml.@scaleY, 1);
+			sp.scaleY = Number(xml.@scaleY) || 1;
 			
-			sp.rotation = getNumberInXML(xml.@rotation, 0);
+			sp.rotation = Number(xml.@rotation) || 0;
 			
-			sp.alpha = getNumberInXML(xml.@alpha, 1);
+			sp.alpha = Number(xml.@alpha) || 1;
 			
-			sp.visible = getBooleanInXML(xml.@visible, true);
-			//sp.smoothing = getBooleanInXML(xml.@smoothing, false);
+			sp.visible = stringToBoolean(xml.@visible) || true;
 			
-			sp.cacheAsBitmap = getBooleanInXML(xml.@cacheAsBitmap, false);
+			sp.cacheAsBitmap = stringToBoolean(xml.@cacheAsBitmap) || false;
 			
-			sp.blendMode = getStringInXML(xml.@blendMode, "normal");
+			sp.blendMode = String(xml.@blendMode) || "normal";
 			
-			sp.name = getStringInXML(xml.@id, "");
+			sp.name = String(xml.@id) || "";
 			
-			sp.alignment = getStringInXML(xml.@align, "tl");
+			sp.alignment = String(xml.@align) || "tl";
 			
-			sp.offsetX = getNumberInXML(xml.@offsetX, 0);
+			sp.offsetX = Number(xml.@offsetX) || 0;
 			
-			sp.offsetY = getNumberInXML(xml.@offsetY, 0);
+			sp.offsetY = Number(xml.@offsetY) || 0;
 			//sp.align();
 			return sp;
 		}
@@ -657,7 +673,7 @@ package
 		protected var da:Number;
 		private function autorotate():void
 		{
-			da = getNumberInXML(settings.camera.@autorotatorIncrement,0.25);
+			da = findValueInXML("autorotatorIncrement", Number, 0.25);
 			for (var i:uint=0; i < spaces.length; i++)
 			{
 				var cam:Camera3D = Camera3D(spaces[i]["camera"]);
@@ -945,6 +961,7 @@ package
 					var obj:DisplayObject3D = objects[ j ];
 					
 					// objects, e.g. cube with multiple materials have to have materials accessed with a loop on the matList
+					// IMPROVE so that all objs with MaterialsList do this
 					if (obj is Cube)
 					{
 						for each(  var mo3d:MaterialObject3D in obj.materials.materialsByName )
@@ -1022,7 +1039,7 @@ package
 			
 			spaces[idx]["name"] = currentSpace;
 			
-			if ( getBooleanInXML(settings.@statistics, false) )
+			if ( stringToBoolean(settings.@statistics) || false )
 			{
 				var stats:StatsView = new StatsView( spaces[idx]["renderer"] );
 			
@@ -1327,7 +1344,7 @@ package
 			
 			if (checkCurrentSceneFirst)
 			{
-				attr = findStringInXML(name);
+				attr = findValueInXML(name, String, "");
 			}
 			else attr = settings.attribute(name).toString();
 			
@@ -1397,89 +1414,13 @@ package
 			else return ReturnClass(def);
 		}
 		
-		private function findNumberInXML(name:String, def:Number=0):Number
+		private function stringToBoolean(str:String):Boolean
 		{
-			var cs:XML = findSpaceNode(currentSpace);
-			if (cs)
-			{
-				if ( cs.attribute(name).toString().length != 0 )
-				{ 
-					return Number( cs.attribute(name) );
-				}
-			}
-			if ( settings.spaces.attribute(name).toString().length != 0 )
-			{ 
-				return Number( settings.spaces.attribute(name) );
-			}
-			else return def;
-		}
-		private function findIntInXML(name:String, def:int=0):int
-		{
-			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
-			{
-				return int( findSpaceNode(currentSpace).attribute(name) );
-			}
-			if ( settings.spaces.attribute(name).toString().length != 0 )
-			{
-				return int( settings.spaces.attribute(name) );
-			}
-			else return def;
-		}
-		private function findBooleanInXML(name:String, def:Boolean=false):Boolean
-		{
-			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
-			{
-				if ( findSpaceNode(currentSpace).attribute(name).toString() == "true" ) return true;
-				
-				else return false;
-			}
-			if ( settings.spaces.attribute(name).toString().length != 0 )
-			{
-				if ( settings.spaces.attribute(name) == "true" ) return true;
-				
-				else return false;
-			}
-			else return def;
-		}
-		private function findStringInXML(name:String, def:String=null):String
-		{
-			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
-			{
-				return String( findSpaceNode(currentSpace).attribute(name) );
-			}
-			if ( settings.spaces.attribute(name).toString().length != 0 )
-			{
-				return String( settings.spaces.attribute(name) );
-			}
-			else return def;
+			var ret:Boolean;
+			(str == "true") ? ret=true : ret=false;
+			return ret;
 		}
 		
-		private function getBooleanInXML(name:String, def:Boolean=false):Boolean
-		{
-			if ( name.length != 0 )
-			{
-				if (name == "true") { return true }
-				else { return false }
-				
-			}
-			
-			else { return def; }
-		}
-		private function getNumberInXML(name:String, def:Number=0):Number
-		{
-			if ( name.length != 0 ) return Number(name);
-			else return def;
-		}
-		private function getIntInXML(name:String, def:int=0):int
-		{
-			if ( name.length != 0 ) return int(name);
-			else return def;
-		}
-		private function getStringInXML(name:String, def:String=null):String
-		{
-			if ( name.length != 0 ) return String(name);
-			else return def;
-		}
 		
 	}
 }
