@@ -4,38 +4,41 @@
 	<spaces
 		transition="3,alpha,0,Expo.easeInOutExpo"
 		
-		cameraContinuity="free" 
-		zoom="7"
-		focus="100"
-		zoomIncrement="0.2"
-		keyIncrement="75"
+		cameraRetainsLastValues="true" 
+		cameraZoom="11"
+		cameraFocus="100"
+		cameraZoomIncrement="0.2"
+		cameraKeyIncrement="75"
 		cameraSensitivity="60"
 		cameraFriction="0.3"
-		cameraThreshold="0.0001"
-		zoomMin="6"
-		zoomMax="15"
+		cameraRestThreshold="0.0001"
+		cameraMinimumZoom="10"
+		cameraMaximumZoom="12"
 		
-		autorotator="false"
+		autorotator="true"
 		autorotatorIncrement="0.25"
 		autorotatorDelay="15000"
 		
 		dynamicQualityAdjustment="true"
-		accelerating_precise="true"
-		accelerating_precision="4"
-		accelerating_smooth="false"
-		decelerating_precise="true"
-		decelerating_precision="4"
-		decelerating_smooth="true"
-		stopped_precise="true"
-		stopped_precision="1"
-		stopped_smooth="true"
+		
+		preciseOnAcceleration="true"
+		precisionOnAcceleration="16"
+		smoothOnAcceleration="false"
+		
+		preciseOnDeceleration="true"
+		precisionOnDeceleration="8"
+		smoothOnDeceleration="true"
+		
+		preciseAtRest="true"
+		precisionAtRest="100"
+		smoothAtRest="false"
 	>
 		<space id="preview"
 			interactive="0"
 			transition="3,alpha,0,Expo.easeInOutExpo"
 			onTransitionEnd="loadSpace:concert1"
 		>
-			<sphere id="preview_pano" radius="100000" segments="24" oneSide="false">
+			<sphere id="preview_pano" segments="9">
 				<file>images/preview.jpg</file>
 			</sphere>
 			
@@ -43,8 +46,10 @@
 		<space id="concert1"
 			interactive="true"
 			onTransitionEnd="removeLastSpace"
+			cameraMinimumZoom="5"
+			cameraMaximumZoom="16"
 		>
-			<cube id="concert1_pano" width="100000" segments="15" oneSide="true" smooth="true" precise="true">
+			<cube id="concert1_pano" segments="9">
 				<file id="front">images/Concert_1-sm_f.jpg</file>
 				<file id="right">images/Concert_1-sm_r.jpg</file>
 				<file id="left">images/Concert_1-sm_l.jpg</file>
@@ -68,10 +73,8 @@
 		<space id="concert2"
 			interactive="true"
 			onTransitionEnd="removeLastSpace"
-pan="50"
-tilt="6"
 		>
-			<cube id="concert2_pano" width="100000" segments="15" oneSide="true" smooth="true" precise="false">
+			<cube id="concert2_pano"  segments="9">
 				<file id="front">images/Concert_2_blend-flat-s_f.jpg</file>
 				<file id="right">images/Concert_2_blend-flat-s_r.jpg</file>
 				<file id="left">images/Concert_2_blend-flat-s_l.jpg</file>
