@@ -37,7 +37,7 @@ package
 	import org.papervision3d.cameras.Camera3D;
 	import zephyr.objects.primitives.Cube;
 	import org.papervision3d.objects.primitives.Plane;
-	import org.papervision3d.objects.primitives.Sphere;
+	import zephyr.objects.primitives.Sphere;
 	import org.papervision3d.render.BasicRenderEngine;
 	import org.papervision3d.scenes.Scene3D;
 	import org.papervision3d.view.Viewport3D;
@@ -87,6 +87,8 @@ package
 		public var currentSpace:String = "";
 		
 		public var lastSpace:String = "";
+		
+		public var loadingSpace:String = "";
 		
 		private var interactionEquivalents:Object = { mouseClick:"onClick", mouseOver:"onOver", mouseOut:"onOut", mousePress:"onPress", mouseRelease:"onRelease", mouseMove:"onMouseMove", mouseDown:"onPress", mouseUp:"onRelease", click:"onClick" };
 		
@@ -148,7 +150,7 @@ package
 		{
 			settings = XML(e.target.data);
 			
-			initCameraController( getBooleanInXML(settings.spaces.@autorotator, true), getNumberInXML(settings.spaces.@autorotatorDelay, 15000) );
+			initCameraController( Boolean(settings.spaces.@autorotator) || true, int(settings.spaces.@autorotatorDelay) || 15000 );
 			
 			refresh();
 			
@@ -159,34 +161,34 @@ package
 		
 		private function refresh():void
 		{
-			sensitivity = 	getNumberInXML(settings.spaces.@cameraSensitivity, 	60);
-			friction = 		getNumberInXML(settings.spaces.@cameraFriction, 	0.3);
-			threshold = 	getNumberInXML(settings.spaces.@cameraThreshold, 	0.0001);
-			keyIncrement = 	getNumberInXML(settings.spaces.@keyIncrement, 		75);
-			zoomIncrement = getNumberInXML(settings.spaces.@zoomIncrement, 		0.2);
+			sensitivity = 	findValueInXML("cameraSensitivity", Number, 	60);
+			friction = 		findValueInXML("cameraFriction", Number, 0.3);
+			threshold = 	findValueInXML("cameraRestThreshold", Number, 0.0001);
+			keyIncrement = 	findValueInXML("cameraKeyIncrement", Number, 75);
+			zoomIncrement = findValueInXML("cameraZoomIncrement", Number, 0.2);
 			
-			maxTilt = findNumberInXML("maxTilt", 9999);
-			minTilt = findNumberInXML("minTilt", 9999);
+			maxTilt = findValueInXML("cameraMaximumTilt", Number, 9999);
+			minTilt = findValueInXML("cameraMinimunTilt", Number, 9999);
 			
-			maxPan = findNumberInXML("maxPan", 9999);
-			minPan = findNumberInXML("minPan", 9999);
+			maxPan = findValueInXML("cameraMaximumPan", Number, 9999);
+			minPan = findValueInXML("cameraMinimumPan", Number, 9999);
 			
-			minZoom = findNumberInXML("minZoom", 1);
-			maxZoom = findNumberInXML("maxZoom", 25);
+			minZoom = findValueInXML("cameraMinimumZoom", Number, 1);
+			maxZoom = findValueInXML("cameraMaximumZoom", Number, 50);
 			
-			accSmooth = getBooleanInXML(settings.spaces.@accelerating_smooth, false);
-			accPrecise = getBooleanInXML(settings.spaces.@accelerating_precise, false);
-			accPrecision = getIntInXML(settings.spaces.@accelerating_precision, 64);
+			accSmooth = findValueInXML("smoothOnAcceleration", Boolean, false);
+			accPrecise = findValueInXML("preciseOnAcceleration", Boolean, false);
+			accPrecision = findValueInXML("precisionOnAcceleration", int, 64);
 			
-			decSmooth = getBooleanInXML(settings.spaces.@decelerating_smooth, true);
-			decPrecise = getBooleanInXML(settings.spaces.@decelerating_precise, true);
-			decPrecision = getIntInXML(settings.spaces.@decelerating_precision, 16);
+			decSmooth = findValueInXML("smoothOnDeceleration", Boolean, true);
+			decPrecise = findValueInXML("precisionOnDeceleration", Boolean, true);
+			decPrecision = findValueInXML("precisionOnDeceleration", int, 16);
 			
-			stopSmooth = getBooleanInXML(settings.spaces.@stopped_smooth, true);
-			stopPrecise = getBooleanInXML(settings.spaces.@stopped_precise, true);
-			stopPrecision = getIntInXML(settings.spaces.@stopped_precision, 1);
+			stopSmooth = findValueInXML("smoothAtRest", Boolean, true);
+			stopPrecise = findValueInXML("preciseAtRest", Boolean, true);
+			stopPrecision = findValueInXML("precisionAtRest", int, 1);
 			
-			da = getNumberInXML(settings.spaces.@autorotatorIncrement,0.25);
+			da = findValueInXML("autorotatorIncrement", Number, 0.25);
 		}
 		
 		private function onSingleItemLoaded(e:Event):void
@@ -204,6 +206,14 @@ package
 		private function onAllLoaded(e : BulkProgressEvent) : void
 		{
 			trace("PS: " + currentSpace + " has loaded");
+			
+			lastSpace = currentSpace;
+			
+			currentSpace = loadingSpace;
+			
+			loadingSpace = "";
+			
+			refresh();
 			
 			// create a new space (viewport, scene, and camera)
 			var idx:int = instantiateNewSpace();
@@ -226,22 +236,22 @@ package
 					primitive.name = xml.@id.toString();
 					
 					//set position and rotation of primitive, using += so that it can be pre adjusted e.g. sphere
-					primitive.x += getIntInXML(xml.@x, 0);
-					primitive.y += getIntInXML(xml.@y, 0);
-					primitive.z += getIntInXML(xml.@z, 0);
+					primitive.x += int(xml.@x) || 0;
+					primitive.y += int(xml.@y) || 0;
+					primitive.z += int(xml.@z) || 0;
 					
-					primitive.rotationX += getIntInXML(xml.@rotationX, 0);
-					primitive.rotationY += getIntInXML(xml.@rotationY, 0); 
-					primitive.rotationZ += getIntInXML(xml.@rotationZ, 0); 
+					primitive.rotationX += Number(xml.@rotationX) || 0;
+					primitive.rotationY += Number(xml.@rotationY) || 0; 
+					primitive.rotationZ += Number(xml.@rotationZ) || 0; 
 					
-					primitive.visible = getBooleanInXML(xml.@visible, true);
+					primitive.visible = Boolean(xml.@visible) || true;
 					
-					if ( getStringInXML(xml.@onClick) != null ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, interactionScene3DEventHandler, false, 0, true); }
-					if ( getStringInXML(xml.@onOver) != null ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, interactionScene3DEventHandler, false, 0, true); }
-					if ( getStringInXML(xml.@onOut) != null ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, interactionScene3DEventHandler, false, 0, true); }
-					if ( getStringInXML(xml.@onPress) != null ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_PRESS, interactionScene3DEventHandler, false, 0, true); }
-					if ( getStringInXML(xml.@onRelease) != null ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_RELEASE, interactionScene3DEventHandler, false, 0, true); }
-					if ( getStringInXML(xml.@onOverMove) != null ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_MOVE, interactionScene3DEventHandler, false, 0, true); }
+					if ( Boolean(xml.@onClick) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, interactionScene3DEventHandler, false, 0, true); }
+					if ( Boolean(xml.@onOver) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, interactionScene3DEventHandler, false, 0, true); }
+					if ( Boolean(xml.@onOut) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, interactionScene3DEventHandler, false, 0, true); }
+					if ( Boolean(xml.@onPress) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_PRESS, interactionScene3DEventHandler, false, 0, true); }
+					if ( Boolean(xml.@onRelease) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_RELEASE, interactionScene3DEventHandler, false, 0, true); }
+					if ( Boolean(xml.@onOverMove) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_MOVE, interactionScene3DEventHandler, false, 0, true); }
 					
 					primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, cursorHandler, false, 0, true);
 					primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, cursorHandler, false, 0, true);
@@ -306,7 +316,7 @@ package
 		private function setupCamera(camera:Camera3D, lastSpace:Object=null):void
 		{
 			// set up camera: 
-			var cameraContinuity:String = findStringInXML("cameraContinuity");
+			var cameraContinuity:Boolean = findBooleanInXML("CameraRetainsLastValuse");
 			var pan:Number = findNumberInXML("pan", 0 );
 			var tilt:Number = findNumberInXML("tilt", 0);
 			var zoom:Number = findNumberInXML("zoom", 12);
@@ -316,7 +326,7 @@ package
 			var camZ:Number = findNumberInXML("cameraZ", 1);
 			
 			// leash free or default unspecified leashing
-			if (cameraContinuity == "free" || cameraContinuity == "")
+			if (!cameraContinuity)
 			{
 				camera.rotationX = tilt;
 				camera.rotationY = pan;
@@ -327,7 +337,7 @@ package
 				camera.y = camY;
 				camera.z = camZ;
 				}
-			else if ( cameraContinuity == "lock" )
+			else
 			{
 				//leash = lock
 				camera.rotationX = lastSpace != null ? lastSpace["camera"].rotationX : tilt ;
@@ -348,15 +358,24 @@ package
 			//var material:BitmapMaterial = new BitmapMaterial( bulkLoader.getBitmapData(xml.file.toString(), true) );
 			var material:BitmapMaterial =  unclaimedMaterials[xml.file.toString()];
 			
-			material.oneSide = getBooleanInXML( xml.@oneSide, true );
+			material.oneSide = Boolean( xml.@oneSide) || true ;
 			
-			material.smooth = getBooleanInXML( xml.@smooth, false );
+			if ( findValueInXML("dynamicQualityAdjustment", Boolean, true) )
+			{
+				material.smooth = findValueInXML("smoothAtRest", Boolean, true) ;
+				
+				material.precise = findValueInXML("preciseAtRest", Boolean, true) ;
 			
-			material.interactive = getBooleanInXML( xml.@interactive, false );
-			
-			material.precise = getBooleanInXML( xml.@precise, false );
-			
-			material.precision = getIntInXML( xml.@precision, 1 );
+				material.precision = findValueInXML("precisionAtRest", int, 1) ;
+			}
+			else
+			{
+				material.smooth = Boolean( xml.@smooth) || false ;
+					
+				material.precise = Boolean( xml.@precise) || false ;
+				
+				material.precision = int( xml.@precision) || 8 ;
+			}
 			
 			return material
 		}
@@ -367,14 +386,16 @@ package
 			var material:BitmapMaterial = createBitmapMaterial(xml);
 			//var material:BitmapMaterial =  BitmapMaterial(unclaimedMaterials[xml.file.toString()]);
 			
-			var segments:int = getIntInXML( xml.@segments, 24 );
+			var segments:int = int( xml.@segments) || 9 ;
 			
-			var radius:int = getIntInXML( xml.@radius, 1000 );
+			var radius:int = int( xml.@radius ) || 50000;
 			
-			var sphere:Sphere = new Sphere(material, radius, segments, segments );
+			var reverse:Boolean = Boolean(xml.@reverse) || true;
 			
-			sphere.rotationY = 77;
-			sphere.rotationZ = 1;
+			var sphere:Sphere = new Sphere(material, radius, segments, segments, reverse );
+						
+			sphere.rotationY = -50;
+			sphere.rotationZ = 0;
 						
 			return sphere;
 		}
@@ -386,31 +407,11 @@ package
 			
 			for each (var file:XML in xml.file)
 			{
-				//var material:BitmapMaterial = new BitmapMaterial( bulkLoader.getBitmapData(file.toString(), true) );
-				
-				
 				var material:BitmapMaterial =  BitmapMaterial(unclaimedMaterials[file.toString()]);
 				
-				material.oneSide = getBooleanInXML( xml.@oneSide, true );
+				material.oneSide = Boolean( xml.@oneSide) || true ;
 			
-				material.interactive = getBooleanInXML( xml.@interactive, false );
-				
-				if ( getBooleanInXML(settings.@dyanmicQualityAdjustment, true) )
-				{
-					material.smooth = getBooleanInXML( settings.@stopped_smooth, true );
-					
-					material.precise = getBooleanInXML( settings.@stopped_precise, true );
-				
-					material.precision = getIntInXML( settings.@stopped_precision, 1 );
-				}
-				else
-				{
-					material.smooth = getBooleanInXML( xml.@smooth, false );
-					
-					material.precise = getBooleanInXML( xml.@precise, true );
-				
-					material.precision = getIntInXML( xml.@precision, 8 );
-				}
+				material.interactive = Boolean( xml.@interactive) || false ;
 				
 				materials.addMaterial( material, file.@id.toString() );
 			}
@@ -418,9 +419,9 @@ package
 			var insideFaces  :int = Cube.ALL;
 			var excludeFaces :int = Cube.NONE;
 			
-			var segments:int = getIntInXML( xml.@segments, 15 );
+			var segments:int = int( xml.@segments) || 9 ;
 			
-			var width:int = getIntInXML( xml.@width, 100000 );
+			var width:int = int( xml.@width ) || 100000 ;
 			
 			var cube:Cube = new Cube( materials, width, width, width, segments, segments, segments, insideFaces, excludeFaces );
 			
@@ -430,59 +431,39 @@ package
 		private function hotspot(xml:XML):Object
 		{
 			var bmd:BitmapData = bulkLoader.getBitmapData(xml.file.toString(), false);
+			
 			var width:Number = (2 / bmd.width ) * 40000;
+			
 			var height:Number = (2 / bmd.height ) * 40000;
 			
+			bmd.dispose();
+			
 			var material:BitmapMaterial = createBitmapMaterial(xml);
-			//var material:BitmapMaterial =  BitmapMaterial(unclaimedMaterials[xml.file.toString()]);
 			
-			var segments:int = getIntInXML( xml.@segments, 2 );
+			var segments:int = int( xml.@segments) ||3 ;
 			
-			var pan:Number = getNumberInXML( xml.@pan, 0 );
+			var pan:Number = Number( xml.@pan) || 0 ;
 			
-			var tilt:Number = getNumberInXML( xml.@tilt, 0 ); 
+			var tilt:Number = Number( xml.@tilt) || 0 ; 
 			
-			//Plane( material:MaterialObject3D=null, width:Number=0, height:Number=0, segmentsW:Number=0, segmentsH:Number=0, initObject:Object=null )
-			//var tfp:TargetFacingPlane = new TargetFacingPlane(getSpaceByName( currentSpace )["camera"] as DisplayObject3D, material, width, height, segments, segments );
-			var tfp:Hotspot = new Hotspot(pan, tilt, material, width, height, segments, segments );
+			var hs:Hotspot = new Hotspot(pan, tilt, material, width, height, segments, segments );
 			
-// 			var p:Number3D = pinToSphere(40000,pan,tilt);
-// 			
-// 			tfp.x = p.x;
-// 			tfp.y = p.y;
-// 			tfp.z = p.z;
-// 			trace("wtf");
-			
-			//tfp.lookAt( getSpaceByName(currentSpace).camera as DisplayObject3D );
-			
-			return tfp;
-			
-			//tooltipTexts[plane.name] = "Alternate View";
+			return hs;
 		}
 		
 		private function plane(xml:XML):Object
 		{
-			//var bmd:BitmapData = bulkLoader.getBitmapData(xml.file.toString(), false);
-			var width:Number = getIntInXML( xml.@width, 100 );
-			var height:Number = getIntInXML( xml.@height, 100 );
+			var width:Number = int( xml.@width) || 100 ;
+			
+			var height:Number = int( xml.@height) || 100 ;
 			
 			var material:BitmapMaterial = createBitmapMaterial(xml);
-			//var material:BitmapMaterial =  BitmapMaterial(unclaimedMaterials[xml.file.toString()]);
 			
-			var segments:int = getIntInXML( xml.@segments, 2 );
+			var segments:int = int( xml.@segments) || 4 ;
 			
-			//var pan:Number = getNumberInXML( xml.@pan, 0 );
-			
-			//var tilt:Number = getNumberInXML( xml.@tilt, 0 );
-			
-			//Plane( material:MaterialObject3D=null, width:Number=0, height:Number=0, segmentsW:Number=0, segmentsH:Number=0, initObject:Object=null )
 			var plane:Plane = new Plane( material, width, height, segments, segments );
 			
-			//plane.lookAt(getSpaceByName( currentSpace )["camera"] as DisplayObject3D);
-			
 			return plane;
-			
-			//tooltipTexts[plane.name] = "Alternate View";
 		}
 		
 		private function stageAlignedSprite(xml:XML):Object
@@ -549,7 +530,7 @@ package
 		and then pushing either the materials from the materialsList, or the material into
 		an array, and then applies the changes to each item in the array.
 		*/
-			if ( getBooleanInXML(settings.@dyanmicQualityAdjustment, true) )
+			if ( findValueInXML(settings.@dyanmicQualityAdjustment, Boolean, true) )
 			{
 				for (var i:int = 0; i < spaces.length; i++)
 				{
@@ -587,7 +568,7 @@ package
 									bmToChange.precise = decPrecise;
 									bmToChange.precision = decPrecision;
 								}
-								else if (type == "stopped")
+								else if (type == "resting")
 								{
 									bmToChange.smooth = stopSmooth;
 									bmToChange.precise = stopPrecise;
@@ -712,13 +693,13 @@ package
 					{ 
 						moveCamera(0, 0, zoomIncrement);
 						
-						stopped = false;
+						resting = false;
 					}
 					if ( zoomout ) 
 					{ 
 						moveCamera(0, 0, -zoomIncrement);
 						
-						stopped = false;
+						resting = false;
 					}
 				}
 				if (mouseIsDown || up || down || left || right)
@@ -737,11 +718,11 @@ package
 				
 				moveCamera( deltaPan, deltaTilt, 0);
 				
-				stopped = false;
+				resting = false;
 			} 
 			else 
 			{ // motion is under threshold stop camera motion
-				if ( !mouseIsDown && !keyIsDown && !stopped)
+				if ( !mouseIsDown && !keyIsDown && !resting)
 				{	
 					// motion is under threshold, stop and remove enter frame listener
 					deltaPan = 0;
@@ -749,12 +730,12 @@ package
 					
 					moveCamera(deltaPan, deltaTilt, 0)
 					
-					changeQuality("stopped");
+					changeQuality("resting");
 					
 					if (_autorotatorOn)
 						restartAutorotatorTimer();
 						
-					stopped = true;
+					resting = true;
 				
 				}
 			}
@@ -897,8 +878,6 @@ package
 			if (bulkLoader.isRunning)
 			{
 				bulkLoader.removeAll();
-				
-				currentSpace = lastSpace;
 			}
 			
 			for each (var xml:XML in findSpaceNode(name).children() )
@@ -910,14 +889,11 @@ package
 					if (xml.name().localName.toString() != "bitmap")
 					{
 						bulkLoader.get(mat.toString()).addEventListener(Event.COMPLETE, onSingleItemLoaded, false, 100, true);
-					
 					}
 				}
 			}
 			
-			lastSpace = currentSpace;
-			
-			currentSpace = name;
+			loadingSpace = name;
 			
 			bulkLoader.start();
 			
@@ -933,7 +909,6 @@ package
 			{
 				bulkLoader.removeAll();
 				
-				currentSpace = lastSpace;
 			}
 			
 			for each (var mat:XML in findSpaceNode(name)..file)
@@ -944,9 +919,7 @@ package
 				
 			}
 			
-			lastSpace = currentSpace;
-			
-			currentSpace = name;
+			loadingSpace = name;
 			
 			bulkLoader.start();
 			
@@ -1113,7 +1086,7 @@ package
 		private var _autorotatorDelay:Number = 15000;
 		private var _autorotatorOn:Boolean = true;
 		
-		private var stopped:Boolean = true;
+		private var resting:Boolean = true;
 		
 		private var mouseIsDown:Boolean = false;
 		private var keyIsDown:Boolean = false;
@@ -1402,17 +1375,40 @@ package
 					break;
 				}
 			}
-			return spaceNode;
+			if (spaceNode.@id == name)
+				return spaceNode;
+			else return null;
+		}
+		
+		private function findValueInXML(name:String, ReturnClass:Class, def:*):*
+		{
+			var cs:XML = findSpaceNode(currentSpace);
+			if (cs)
+			{
+				if ( cs.attribute(name).toString().length != 0 )
+				{ 
+					return ReturnClass( cs.attribute(name) );
+				}
+			}
+			if ( settings.spaces.attribute(name).toString().length != 0 )
+			{ 
+				return ReturnClass( settings.spaces.attribute(name) );
+			}
+			else return ReturnClass(def);
 		}
 		
 		private function findNumberInXML(name:String, def:Number=0):Number
 		{
-			if ( findSpaceNode(currentSpace).attribute(name).toString().length != 0 )
+			var cs:XML = findSpaceNode(currentSpace);
+			if (cs)
 			{
-				return Number( findSpaceNode(currentSpace).attribute(name) );
+				if ( cs.attribute(name).toString().length != 0 )
+				{ 
+					return Number( cs.attribute(name) );
+				}
 			}
 			if ( settings.spaces.attribute(name).toString().length != 0 )
-			{
+			{ 
 				return Number( settings.spaces.attribute(name) );
 			}
 			else return def;
