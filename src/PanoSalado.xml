@@ -5,28 +5,28 @@
 		transition="3,alpha,0,Expo.easeInOutExpo"
 		
 		cameraRetainsLastValues="true" 
-		cameraZoom="11"
+		cameraZoom="7"
 		cameraFocus="100"
 		cameraZoomIncrement="0.2"
 		cameraKeyIncrement="75"
 		cameraSensitivity="60"
 		cameraFriction="0.3"
 		cameraRestThreshold="0.0001"
-		cameraMinimumZoom="10"
-		cameraMaximumZoom="12"
+		cameraMinimumZoom="6"
+		cameraMaximumZoom="15"
 		
-		autorotator="true"
+		autorotator="false"
 		autorotatorIncrement="0.25"
 		autorotatorDelay="15000"
 		
 		dynamicQualityAdjustment="true"
 		
 		preciseOnAcceleration="true"
-		precisionOnAcceleration="16"
+		precisionOnAcceleration="4"
 		smoothOnAcceleration="false"
 		
 		preciseOnDeceleration="true"
-		precisionOnDeceleration="8"
+		precisionOnDeceleration="4"
 		smoothOnDeceleration="true"
 		
 		preciseAtRest="true"
@@ -49,7 +49,7 @@
 			cameraMinimumZoom="5"
 			cameraMaximumZoom="16"
 		>
-			<cube id="concert1_pano" segments="9">
+			<cube id="concert1_pano" segments="15">
 				<file id="front">images/Concert_1-sm_f.jpg</file>
 				<file id="right">images/Concert_1-sm_r.jpg</file>
 				<file id="left">images/Concert_1-sm_l.jpg</file>
@@ -70,11 +70,23 @@
 			</hotspot>
 			
 		</space>
+		<space id="preview2"
+			interactive="0"
+			transition="3,alpha,0,Expo.easeInOutExpo"
+			onTransitionEnd="loadSpace:concert2"
+			pan="50"
+			tilt="6"
+		>
+			<sphere id="preview_pano" radius="100000" segments="24" oneSide="false">
+				<file>images/preview2.jpg</file>
+			</sphere>
+			
+		</space>
 		<space id="concert2"
 			interactive="true"
 			onTransitionEnd="removeLastSpace"
 		>
-			<cube id="concert2_pano"  segments="9">
+			<cube id="concert2_pano"  segments="15">
 				<file id="front">images/Concert_2_blend-flat-s_f.jpg</file>
 				<file id="right">images/Concert_2_blend-flat-s_r.jpg</file>
 				<file id="left">images/Concert_2_blend-flat-s_l.jpg</file>
@@ -89,7 +101,7 @@
 				segments="2"
 				oneSide="false"
 				smooth="true"
-				onClick="loadSpace:concert1"
+				onClick="loadSpace:preview"
 			>
 				<file>graphics/hotspot.png?1</file>
 			</hotspot>
