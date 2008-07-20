@@ -1,4 +1,4 @@
-package org.papervision3d.objects.primitives {
+package zephyr.objects.primitives {
 	import org.papervision3d.Papervision3D;
 	import org.papervision3d.core.geom.*;
 	import org.papervision3d.core.geom.renderables.Triangle3D;
@@ -22,6 +22,11 @@ package org.papervision3d.objects.primitives {
 		* Number of segments vertically. Defaults to 6.
 		*/
 		private var segmentsH :Number;
+		
+		/**
+		* Reverse
+		*/
+		private var reverse :Boolean;
 	
 		/**
 		* Default radius of Sphere if not defined.
@@ -74,14 +79,16 @@ package org.papervision3d.objects.primitives {
 		* @param	segmentsH	[optional] - Number of segments vertically. Defaults to 6.
 		* <p/>
 		*/
-		public function Sphere( material:MaterialObject3D=null, radius:Number=100, segmentsW:int=8, segmentsH:int=6 )
+		public function Sphere( material:MaterialObject3D=null, radius:Number=100, segmentsW:int=8, segmentsH:int=6, reverse:Boolean=true )
 		{
 			super( material, new Array(), new Array(), null );
 	
 			this.segmentsW = Math.max( MIN_SEGMENTSW, segmentsW || DEFAULT_SEGMENTSW); // Defaults to 8
 			this.segmentsH = Math.max( MIN_SEGMENTSH, segmentsH || DEFAULT_SEGMENTSH); // Defaults to 6
 			if (radius==0) radius = DEFAULT_RADIUS; // Defaults to 100
-	
+			
+			this.reverse = reverse;
+			
 			var scale :Number = DEFAULT_SCALE;
 	
 			buildSphere( radius );
@@ -89,6 +96,8 @@ package org.papervision3d.objects.primitives {
 	
 		private function buildSphere( fRadius:Number ):void
 		{
+			var rev :int = reverse? -1 : 1;
+			
 			var i:Number, j:Number, k:Number;
 			var iHor:Number = Math.max(3,this.segmentsW);
 			var iVer:Number = Math.max(2,this.segmentsH);
@@ -104,7 +113,7 @@ package org.papervision3d.objects.primitives {
 				for (i=0;i<iHor;i++) { // horizontal
 					var fRad2:Number = Number(2*i/iHor);
 					var fX:Number = fRds*Math.sin(fRad2*Math.PI);
-					var fY:Number = fRds*Math.cos(fRad2*Math.PI);
+					var fY:Number = rev*fRds*Math.cos(fRad2*Math.PI);
 					if (!((j==0||j==iVer)&&i>0)) { // top||bottom = 1 vertex
 						oVtx = new Vertex3D(fY,fZ,fX);
 						aVertice.push(oVtx);
