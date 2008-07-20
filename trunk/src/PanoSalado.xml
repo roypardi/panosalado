@@ -30,8 +30,8 @@
 		smoothOnDeceleration="true"
 		
 		preciseAtRest="true"
-		precisionAtRest="100"
-		smoothAtRest="false"
+		precisionAtRest="1"
+		smoothAtRest="true"
 	>
 		<space id="preview"
 			interactive="0"
