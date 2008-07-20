@@ -248,12 +248,12 @@ package
 					
 					primitive.visible = Boolean(xml.@visible) || true;
 					
-					if ( Boolean(xml.@onClick) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, interactionScene3DEventHandler, false, 0, true); }
-					if ( Boolean(xml.@onOver) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, interactionScene3DEventHandler, false, 0, true); }
-					if ( Boolean(xml.@onOut) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, interactionScene3DEventHandler, false, 0, true); }
-					if ( Boolean(xml.@onPress) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_PRESS, interactionScene3DEventHandler, false, 0, true); }
-					if ( Boolean(xml.@onRelease) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_RELEASE, interactionScene3DEventHandler, false, 0, true); }
-					if ( Boolean(xml.@onOverMove) ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_MOVE, interactionScene3DEventHandler, false, 0, true); }
+					if ( xml.@onClick != "" ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, interactionScene3DEventHandler, false, 0, true); }
+					if ( xml.@onOver != "" ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, interactionScene3DEventHandler, false, 0, true); }
+					if ( xml.@onOut != "" ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, interactionScene3DEventHandler, false, 0, true); }
+					if ( xml.@onPress != "" ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_PRESS, interactionScene3DEventHandler, false, 0, true); }
+					if ( xml.@onRelease != "" ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_RELEASE, interactionScene3DEventHandler, false, 0, true); }
+					if ( xml.@onOverMove != "" ) { primitive.addEventListener(InteractiveScene3DEvent.OBJECT_MOVE, interactionScene3DEventHandler, false, 0, true); }
 					
 					primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, cursorHandler, false, 0, true);
 					primitive.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, cursorHandler, false, 0, true);
@@ -362,6 +362,8 @@ package
 			
 			material.oneSide = stringToBoolean(xml.@oneSide) || true ;
 			
+			material.interactive = stringToBoolean( xml.@interactive) || false ;
+			
 			if ( findValueInXML("dynamicQualityAdjustment", Boolean, true) )
 				{
 					material.smooth =  findValueInXML("smoothAtRest", Boolean, true  ) ;
@@ -456,6 +458,8 @@ package
 			var height:Number = (2 / bmd.height ) * 40000;
 			
 			var material:BitmapMaterial = createBitmapMaterial(xml);
+			
+			material.interactive = stringToBoolean( xml.@interactive) || true ;
 			
 			var segments:int = int( xml.@segments) || 3 ;
 			
