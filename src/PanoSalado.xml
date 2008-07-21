@@ -12,8 +12,8 @@
 		cameraSensitivity="60"
 		cameraFriction="0.3"
 		cameraRestThreshold="0.0001"
-		cameraMinimumZoom="6"
-		cameraMaximumZoom="15"
+		cameraMinimumZoom="8"
+		cameraMaximumZoom="11"
 		
 		autorotator="false"
 		autorotatorIncrement="0.25"
@@ -23,7 +23,7 @@
 		
 		preciseOnAcceleration="true"
 		precisionOnAcceleration="4"
-		smoothOnAcceleration="false"
+		smoothOnAcceleration="true"
 		
 		preciseOnDeceleration="true"
 		precisionOnDeceleration="4"
@@ -85,6 +85,8 @@
 		<space id="concert2"
 			interactive="true"
 			onTransitionEnd="removeLastSpace"
+			pan="50"
+			tilt="6"
 		>
 			<cube id="concert2_pano"  segments="15">
 				<file id="front">images/Concert_2_blend-flat-s_f.jpg</file>
@@ -97,7 +99,7 @@
 			<hotspot id="toConcert1" 
 				interactive = "true"
 				pan="80" 
-				tilt="10" 
+				tilt="5" 
 				segments="2"
 				oneSide="false"
 				smooth="true"
