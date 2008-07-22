@@ -4,7 +4,7 @@
 	<spaces
 		transition="3,alpha,0,Expo.easeInOutExpo"
 		
-		cameraRetainsLastValues="true" 
+		cameraRetainsLastValues="false" 
 		cameraZoom="7"
 		cameraFocus="100"
 		cameraZoomIncrement="0.2"
@@ -12,13 +12,14 @@
 		cameraSensitivity="60"
 		cameraFriction="0.3"
 		cameraRestThreshold="0.0001"
-		cameraMinimumZoom="8"
-		cameraMaximumZoom="11"
+		cameraMinimumZoom="5"
+		cameraMaximumZoom="16"
 		
 		autorotator="false"
 		autorotatorIncrement="0.25"
 		autorotatorDelay="15000"
-		
+		autorotatorAutoHorizon = "true"
+
 		dynamicQualityAdjustment="true"
 		
 		preciseOnAcceleration="true"
@@ -64,7 +65,7 @@
 				segments="2"
 				oneSide="false"
 				smooth="true"
-				onClick="loadSpace:concert2"
+				onClick="loadSpace:preview2"
 			>
 				<file>graphics/hotspot.png</file>
 			</hotspot>
@@ -77,7 +78,7 @@
 			pan="50"
 			tilt="6"
 		>
-			<sphere id="preview_pano" radius="100000" segments="24" oneSide="false">
+			<sphere id="preview_pano" radius="100000" segments="9" oneSide="false">
 				<file>images/preview2.jpg</file>
 			</sphere>
 			
