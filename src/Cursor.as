@@ -51,7 +51,7 @@ package
 		
 		private var cursor:Bitmap;
 		
-		public function Cursor()
+		public function Cursor(settingsXML:XML=null)
 		{
 			addEventListener(Event.ADDED_TO_STAGE, stageReady, false, 0, true);
 			
