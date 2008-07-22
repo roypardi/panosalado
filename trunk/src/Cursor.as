@@ -51,7 +51,9 @@ package
 		
 		private var cursor:Bitmap;
 		
-		public function Cursor(settingsXML:XML=null)
+		private var settings:XML;
+		
+		public function Cursor()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, stageReady, false, 0, true);
 			
@@ -63,6 +65,8 @@ package
 		private function stageReady(e:Event):void
 		{
 			parent.addEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
+			
+			settings = parent["xmlByName"]["Cursor"];
 		}
 		
 		private function layersReady(e:Event):void

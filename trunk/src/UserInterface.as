@@ -34,7 +34,9 @@ import flash.text.*
 	private var loadingText:TextField = new TextField();
 	private var loadingTextFormat:TextFormat = new TextFormat();
 	
-		public function UserInterface(settingsXML:XML=null)
+	private var settings:XML;
+	
+		public function UserInterface()
 		{
 			buttons_container = new Container();
 			buttons_bg = new Bg()
@@ -110,6 +112,8 @@ import flash.text.*
 		private function stageReady(e:Event):void 
 		{
 			parent.addEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
+			
+			settings = parent["xmlByName"]["Interface"];
 		}
 		
 		private function layersReady(e:Event):void 
