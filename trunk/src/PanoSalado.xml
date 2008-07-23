@@ -1,0 +1,107 @@
+<PanoSalado>
+	<layer id="PanoSalado" url="PanoSalado.swf?xml=PanoSalado.xml" depth="0" onStart="loadSpace:preview">
+		<spaces
+			
+		
+			transition="3,alpha,0,Expo.easeInOutExpo"
+			
+			cameraRetainsLastValues="true" 
+			cameraZoom="11"
+			cameraFocus="100"
+			cameraZoomIncrement="0.2"
+			cameraKeyIncrement="75"
+			cameraSensitivity="60"
+			cameraFriction="0.3"
+			cameraRestThreshold="0.0001"
+			cameraMinimumZoom="10"
+			cameraMaximumZoom="12"
+			
+			autorotator="false"
+			autorotatorIncrement="0.25"
+			autorotatorDelay="15000"
+			
+			dynamicQualityAdjustment="true"
+			
+			preciseOnAcceleration="true"
+			precisionOnAcceleration="16"
+			smoothOnAcceleration="false"
+			
+			preciseOnDeceleration="true"
+			precisionOnDeceleration="8"
+			smoothOnDeceleration="true"
+			
+			preciseAtRest="true"
+			precisionAtRest="1"
+			smoothAtRest="true"
+		>
+			<space id="preview"
+				interactive="0"
+				transition="3,alpha,0,Expo.easeInOutExpo"
+				onTransitionEnd="loadSpace:concert1"
+			>
+				<sphere id="preview_pano">
+					<file>images/preview.jpg</file>
+				</sphere>
+				
+			</space>
+			<space id="concert1"
+				interactive="true"
+				onTransitionEnd="removeLastSpace"
+				
+				goForward="tween:roll on camera over 0.5 seconds to 0 using Expo.easeInOutExpo"
+			>
+				<cube id="concert1_pano">
+					<file id="front">images/Concert_1-sm_f.jpg</file>
+					<file id="right">images/Concert_1-sm_r.jpg</file>
+					<file id="left">images/Concert_1-sm_l.jpg</file>
+					<file id="top">images/Concert_1-sm_u.jpg</file>
+					<file id="bottom">images/Concert_1-sm_d.jpg</file>
+					<file id="back">images/Concert_1-sm_b.jpg</file>
+				</cube>
+				<hotspot id="toConcert2" 
+					useHandCursor="true"
+					pan="-20" 
+					tilt="-10" 
+					segments="2"
+					oneSide="false"
+					smooth="true"
+					
+					onClick="loadSpace:concert2"
+					goBack="tween:roll on camera over 0.5 seconds to -5 using Expo.easeInOutExpo then do concert1.goForward"
+					
+					tooltip="testing testing"
+				>
+					<file>graphics/hotspot.png</file>
+				</hotspot>
+				
+			</space>
+			<space id="concert2"
+				interactive="true"
+				onTransitionEnd="removeLastSpace"
+			>
+				<cube id="concert2_pano">
+					<file id="front">images/Concert_2_blend-flat-s_f.jpg</file>
+					<file id="right">images/Concert_2_blend-flat-s_r.jpg</file>
+					<file id="left">images/Concert_2_blend-flat-s_l.jpg</file>
+					<file id="top">images/Concert_2_blend-flat-s_u.jpg</file>
+					<file id="bottom">images/Concert_2_blend-flat-s_d.jpg</file>
+					<file id="back">images/Concert_2_blend-flat-s_b.jpg</file>
+				</cube>
+				<hotspot id="toConcert1" 
+					pan="80" 
+					tilt="10" 
+					segments="2"
+					oneSide="false"
+					smooth="true"
+					useHandCursor="true"
+					onClick="loadSpace:concert1"
+				>
+					<file>graphics/hotspot.png?1</file>
+				</hotspot>
+			</space>
+		</spaces>
+	
+	</layer>
+	<layer id="Interface" url="UserInterface.swf" depth="1"/>
+	<layer id="Cursor" url="Cursor.swf" depth="10"/>
+</PanoSalado>
