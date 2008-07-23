@@ -6,7 +6,7 @@ package
 	import flash.utils.Dictionary;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
-	import zephyr.utils.LayerEvent;
+	import zephyr.BroadcastEvent;
 	
 	public class ModuleLoader extends Sprite
 	{
@@ -65,7 +65,7 @@ package
 					}
 				}
 				
-				dispatchEvent( new LayerEvent(LayerEvent.ALL_LAYERS_LOADED) );
+				dispatchEvent( new BroadcastEvent(BroadcastEvent.ALL_LAYERS_LOADED) );
 			}
 		}
 	}

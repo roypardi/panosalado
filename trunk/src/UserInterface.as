@@ -4,7 +4,6 @@ import flash.display.*;
 import flash.events.*;
 import flash.utils.Dictionary;
 import flash.system.ApplicationDomain;
-import zephyr.utils.LayerEvent;
 import zephyr.BroadcastEvent;
 import flash.text.*
 //import fl.managers.StyleManager;
@@ -24,6 +23,7 @@ import flash.text.*
 	private var DisplayObject3D:Class;
 	private var InteractiveScene3DEvent:Class;
 	private var Viewport3D:Class;
+	private var BroadcastEvent:Class;
 	
 	private var TweenLiteTo:Function;
 		
@@ -111,7 +111,9 @@ import flash.text.*
 		
 		private function stageReady(e:Event):void 
 		{
-			parent.addEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
+			BroadcastEvent = ApplicationDomain.currentDomain.getDefinition("zephyr.BroadcastEvent") as Class;
+			
+			parent.addEventListener(BroadcastEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
 			
 			settings = parent["xmlByName"]["Interface"];
 		}
@@ -126,6 +128,7 @@ import flash.text.*
 			TweenLite = ApplicationDomain.currentDomain.getDefinition("gs.TweenLite") as Class;
 			InteractiveScene3DEvent = ApplicationDomain.currentDomain.getDefinition("org.papervision3d.events.InteractiveScene3DEvent") as Class;
 			Viewport3D = ApplicationDomain.currentDomain.getDefinition("org.papervision3d.view.Viewport3D") as Class;
+			
 			
 			TweenLiteTo = TweenLite["to"];
 			
@@ -150,7 +153,7 @@ import flash.text.*
 			BulkLoader(panoSalado.bulkLoader).addEventListener(BulkLoader.COMPLETE, completeHandler, false, 0, true);
 		
 			// clean up after ourselves
-			parent.removeEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady);
+			parent.removeEventListener(BroadcastEvent.ALL_LAYERS_LOADED, layersReady);
 		}
 		
 		// let's give some "load progress" feedback:
@@ -185,38 +188,38 @@ import flash.text.*
 		private function completeHandler(e : Event):void {
 			resizeHandler();
 		
-			/* ZEPHYR:
-			
-			Now that we've stripped down Interface to the bare essentials... 
-			Does it make sense to allow the <hotspot/> elements in PanoSalado.xml have
-			attributes such as "useHandCursor", "buttonMode", and so on?
-			
-			This would let the functions here in the completeHandler be collapsed
-			into one loop, which could iterate through the <hotspot/> elements, and
-			add or not add the EventListeners as dictated...
-			
-			?
-			
-			On that note, correct me where I'm wrong...
-			Each time we load a new pano (loadSpace:blah), are the event listeners being garbage collected,
-			and then reintroduced a la this completeHandler? That seems to be the case... Is this
-			heavy-handed? Necessary evil? My wrong thinking?
-			
-			*/
-			var spot:Object = DisplayObject3D( panoSalado.getDisplayObject3dByName("toConcert2") );
-			var spot2:Object = DisplayObject3D( panoSalado.getDisplayObject3dByName("toConcert1") );
-			if (spot) {
-				spot.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, mouseOver3dSpot, false, 0, true);
-				spot.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, mouseOut3dSpot, false, 0, true);
-		
-				spot.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, resetLoadingText, false, 0, true);
-			}
-			if (spot2) {
-				spot2.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, mouseOver3dSpot, false, 0, true);
-				spot2.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, mouseOut3dSpot, false, 0, true);
-				//
-				spot2.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, resetLoadingText, false, 0, true);
-			}
+// 			/* ZEPHYR:
+// 			
+// 			Now that we've stripped down Interface to the bare essentials... 
+// 			Does it make sense to allow the <hotspot/> elements in PanoSalado.xml have
+// 			attributes such as "useHandCursor", "buttonMode", and so on?
+// 			
+// 			This would let the functions here in the completeHandler be collapsed
+// 			into one loop, which could iterate through the <hotspot/> elements, and
+// 			add or not add the EventListeners as dictated...
+// 			
+// 			?
+// 			
+// 			On that note, correct me where I'm wrong...
+// 			Each time we load a new pano (loadSpace:blah), are the event listeners being garbage collected,
+// 			and then reintroduced a la this completeHandler? That seems to be the case... Is this
+// 			heavy-handed? Necessary evil? My wrong thinking?
+// 			
+// 			*/
+// 			var spot:Object = DisplayObject3D( panoSalado.getDisplayObject3dByName("toConcert2") );
+// 			var spot2:Object = DisplayObject3D( panoSalado.getDisplayObject3dByName("toConcert1") );
+// 			if (spot) {
+// 				spot.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, mouseOver3dSpot, false, 0, true);
+// 				spot.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, mouseOut3dSpot, false, 0, true);
+// 		
+// 				spot.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, resetLoadingText, false, 0, true);
+// 			}
+// 			if (spot2) {
+// 				spot2.addEventListener(InteractiveScene3DEvent.OBJECT_OVER, mouseOver3dSpot, false, 0, true);
+// 				spot2.addEventListener(InteractiveScene3DEvent.OBJECT_OUT, mouseOut3dSpot, false, 0, true);
+// 				//
+// 				spot2.addEventListener(InteractiveScene3DEvent.OBJECT_CLICK, resetLoadingText, false, 0, true);
+// 			}
 		}
 		
 		// resizeHandler fires off when the stage is resized. This lets us, for instance, position buttons on-the-fly.

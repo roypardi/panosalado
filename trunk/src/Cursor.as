@@ -12,7 +12,8 @@ package
 	public class Cursor extends Sprite
 	{
 		[Embed(source="pointers/c_c.png")]
-		public var Cursor_MouseDown:Class;
+			public var Cursor_MouseDown:Class;
+			
 		[Embed(source="pointers/c_t.png")]
 			public var Cursor_MouseUp:Class;
 			
@@ -43,6 +44,7 @@ package
 		private var PanoSalado:Class;
 		private var ModuleLoader:Class;
 		private var ViewportBaseLayer:Class;
+		private var BroadcastEvent:Class;
 		
 		private var layerByName:Dictionary;
 		private var panoSalado:Object;
@@ -64,7 +66,9 @@ package
 		
 		private function stageReady(e:Event):void
 		{
-			parent.addEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
+			BroadcastEvent = ApplicationDomain.currentDomain.getDefinition("zephyr.BroadcastEvent") as Class;
+			
+			parent.addEventListener(BroadcastEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
 			
 			settings = parent["xmlByName"]["Cursor"];
 		}
