@@ -12,24 +12,24 @@ package zephyr
 		public static const SHOW_TOOLTIP : String = "showTooltip";
 		public static const HIDE_TOOLTIP : String = "hideTooltip";
 		
-		public var extra:Object;
+		public var info:Object;
 		
-		public function BroadcastEvent( type:String, extra:Object=null )
+		public function BroadcastEvent( type:String, info:Object=null )
 		{
-			if (extra)
-				this.extra = extra;
+			if (info)
+				this.info = info;
 			
 			super(type);
 		}
 		
 		override public function clone():Event
 		{
-			return new BroadcastEvent( type, extra );
+			return new BroadcastEvent( type, info );
 		}
 		
 		override public function toString():String
 		{
-			return formatToString("BroadcastEvent", "type", "bubbles", "cancelable", "eventPhase", "extra");
+			return formatToString("BroadcastEvent", "type", "bubbles", "cancelable", "eventPhase", "info");
 		}
 		
 
