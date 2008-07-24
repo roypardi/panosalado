@@ -3,7 +3,7 @@
 		<spaces
 			
 		
-			transition="currentSpace.viewport.alpha from 0 over 3 seconds using Expo.easeInOut then do onTransitionEnd"
+			transition="currentSpace.viewport.alpha from 0 over 3 seconds using Expo.easeInOut then do spaces.onTransitionEnd"
 			onTransitionEnd="removeLastSpace"
 			
 			cameraRetainsLastValues="true" 
@@ -64,10 +64,8 @@
 					segments="2"
 					oneSide="false"
 					smooth="true"
-					
 					onClick="tween:allCameras.roll to -5 over 0.5 seconds using Expo.easeInOut then do toConcert2.goBack;loadSpace:concert2"
 					goBack="tween:allCameras.roll to -5 over 0.5 seconds using Expo.easeInOut then do concert1.goForward"
-					
 					tooltip="testing testing"
 				>
 					<file>graphics/hotspot.png</file>
