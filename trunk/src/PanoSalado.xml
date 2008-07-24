@@ -1,19 +1,19 @@
 <PanoSalado>
-	<layer id="PanoSalado" url="PanoSalado.swf?xml=PanoSalado.xml" depth="0" onStart="loadSpace:preview">
+	<layer id="Interface" url="UserInterfaceTooltip.swf" depth="1"/>
+	<layer id="Cursor" url="Cursor.swf" depth="10"/>
+	<layer id="PanoSalado" url="PanoSalado.swf?xml=PanoSalado.xml" depth="0" onStart="loadSpace:preview" >
 		<spaces
-			
-		
 			transition="3,alpha,0,Expo.easeInOutExpo"
 			
-			cameraRetainsLastValues="true" 
-			cameraZoom="11"
+			cameraRetainsLastValues="false" 
+			cameraZoom="10"
 			cameraFocus="100"
 			cameraZoomIncrement="0.2"
 			cameraKeyIncrement="75"
 			cameraSensitivity="60"
 			cameraFriction="0.3"
 			cameraRestThreshold="0.0001"
-			cameraMinimumZoom="10"
+			cameraMinimumZoom="8"
 			cameraMaximumZoom="12"
 			
 			autorotator="false"
@@ -23,11 +23,11 @@
 			dynamicQualityAdjustment="true"
 			
 			preciseOnAcceleration="true"
-			precisionOnAcceleration="16"
+			precisionOnAcceleration="10"
 			smoothOnAcceleration="false"
 			
 			preciseOnDeceleration="true"
-			precisionOnDeceleration="8"
+			precisionOnDeceleration="10"
 			smoothOnDeceleration="true"
 			
 			preciseAtRest="true"
@@ -47,7 +47,6 @@
 			<space id="concert1"
 				interactive="true"
 				onTransitionEnd="removeLastSpace"
-				
 				goForward="tween:roll on camera over 0.5 seconds to 0 using Expo.easeInOutExpo"
 			>
 				<cube id="concert1_pano">
@@ -59,17 +58,16 @@
 					<file id="back">images/Concert_1-sm_b.jpg</file>
 				</cube>
 				<hotspot id="toConcert2" 
-					useHandCursor="true"
 					pan="-20" 
 					tilt="-10" 
 					segments="2"
 					oneSide="false"
 					smooth="true"
-					
-					onClick="loadSpace:concert2"
+					useHandCursor="true"
+					onClick="tween:do toConcert2.panTween then do toConcert2.tiltTween;"
 					goBack="tween:roll on camera over 0.5 seconds to -5 using Expo.easeInOutExpo then do concert1.goForward"
-					
-					tooltip="testing testing"
+					panTween="tween:pan on camera over 1.5 seconds to 5 using Expo.easeInOutExpo;"
+					tiltTween="tween:tilt on camera over 1.5 seconds to 60 using Expo.easeInOutExpo"
 				>
 					<file>graphics/hotspot.png</file>
 				</hotspot>
@@ -78,6 +76,8 @@
 			<space id="concert2"
 				interactive="true"
 				onTransitionEnd="removeLastSpace"
+				pan="50"
+				tilt="6"
 			>
 				<cube id="concert2_pano">
 					<file id="front">images/Concert_2_blend-flat-s_f.jpg</file>
@@ -89,12 +89,13 @@
 				</cube>
 				<hotspot id="toConcert1" 
 					pan="80" 
-					tilt="10" 
+					tilt="5" 
 					segments="2"
 					oneSide="false"
 					smooth="true"
 					useHandCursor="true"
-					onClick="loadSpace:concert1"
+					onClick="tween:roll on camera over 0.5 seconds to 5 using Expo.easeInOutExpo then do toConcert2.goBack"
+					goBack="tween:roll on camera over 0.5 seconds to -5 using Expo.easeInOutExpo then do concert1.goForward"
 				>
 					<file>graphics/hotspot.png?1</file>
 				</hotspot>
@@ -102,6 +103,4 @@
 		</spaces>
 	
 	</layer>
-	<layer id="Interface" url="UserInterface.swf" depth="1"/>
-	<layer id="Cursor" url="Cursor.swf" depth="10"/>
 </PanoSalado>
