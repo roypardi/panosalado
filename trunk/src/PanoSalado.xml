@@ -64,10 +64,7 @@
 					oneSide="false"
 					smooth="true"
 					useHandCursor="true"
-					onClick="tween:do toConcert2.panTween then do toConcert2.tiltTween;"
-					goBack="tween:roll on camera over 0.5 seconds to -5 using Expo.easeInOutExpo then do concert1.goForward"
-					panTween="tween:pan on camera over 1.5 seconds to 5 using Expo.easeInOutExpo;"
-					tiltTween="tween:tilt on camera over 1.5 seconds to 60 using Expo.easeInOutExpo"
+					onClick="loadSpace:concert2"
 				>
 					<file>graphics/hotspot.png</file>
 				</hotspot>
@@ -94,8 +91,7 @@
 					oneSide="false"
 					smooth="true"
 					useHandCursor="true"
-					onClick="tween:roll on camera over 0.5 seconds to 5 using Expo.easeInOutExpo then do toConcert2.goBack"
-					goBack="tween:roll on camera over 0.5 seconds to -5 using Expo.easeInOutExpo then do concert1.goForward"
+					onClick="loadSpace:concert1"
 				>
 					<file>graphics/hotspot.png?1</file>
 				</hotspot>
