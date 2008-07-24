@@ -3,7 +3,7 @@
 		<spaces
 			
 		
-			transition="currentSpace.viewport.alpha from 0 over 3 seconds using Expo.easeInOut then do spaces.onTransitionEnd"
+			transition="tween:currentSpace.viewport.alpha from 0 over 1.5 seconds using Expo.easeIn;tween:currentSpace.viewport.rotation from -90 over 3 seconds using Expo.easeInOut then do spaces.onTransitionEnd"
 			onTransitionEnd="removeLastSpace"
 			
 			cameraRetainsLastValues="true" 
@@ -37,7 +37,7 @@
 		>
 			<space id="preview"
 				interactive="0"
-				transition="currentSpace.viewport.alpha from 0 over 3 seconds using Expo.easeInOut then do preview.onTransitionEnd"
+				transition="tween:currentSpace.viewport.alpha from 0 over 3 seconds using Expo.easeInOut then do preview.onTransitionEnd"
 				onTransitionEnd="loadSpace:concert1"
 			>
 				<sphere id="preview_pano">
@@ -64,8 +64,8 @@
 					segments="2"
 					oneSide="false"
 					smooth="true"
-					onClick="tween:allCameras.roll to -5 over 0.5 seconds using Expo.easeInOut then do toConcert2.goBack;loadSpace:concert2"
-					goBack="tween:allCameras.roll to -5 over 0.5 seconds using Expo.easeInOut then do concert1.goForward"
+					onClick="tween:allCameras.roll to 5 over 0.5 seconds using Expo.easeOut then do toConcert2.goBack"
+					goBack="tween:allCameras.roll to '-10' over 0.5 seconds using Expo.easeOut"
 					tooltip="testing testing"
 				>
 					<file>graphics/hotspot.png</file>
