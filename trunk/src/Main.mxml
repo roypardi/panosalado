@@ -6,6 +6,6 @@ layout="absolute" backgroundAlpha="0"
 
 <mx:Style source="styles/external.css" />
 
-<mx:Button label="Autorotator Toggle" id="exampleButton" toggle="true"/>
+<mx:Button label="Autorotator Toggle" id="exampleButton" />
 
 </intns:Main>
