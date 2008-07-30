@@ -51,6 +51,8 @@ package zephyr
 		{
 			trace("example button clicked!", event.target);
 			
+			event.stopImmediatePropagation();
+			
 			panoSalado.execute("toggleAutorotator");
 		}
 		
@@ -70,21 +72,11 @@ package zephyr
 			
 			panoSalado = PanoSalado( layerByName["PanoSalado"] );
 			
-			//hitAreaCanvas.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler, false, 0, true)
 			
 			settings = moduleLoader["xmlByName"]["Interface"];
 			
-			exampleButton.addEventListener(MouseEvent.CLICK, onExampleButtonClick);
-			//exampleButton.x = stage.stageWidth-300;
-			//exampleButton.y = stage.stageHeight-100;
+			exampleButton.addEventListener(MouseEvent.MOUSE_DOWN, onExampleButtonClick);		
 			
-			
-		}
-		
-		protected function mouseDownHandler(e:MouseEvent):void
-		{
-			trace("canvas clicked!", e.target);
-			panoSalado.mouseDownEvent( e );
 		}
 	}
 }
