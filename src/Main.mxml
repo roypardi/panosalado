@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<example:Main xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:example="zephyr.*" 
+layout="absolute" backgroundAlpha="0" width="25%" height="25%"
+>
+
+<mx:Style source="styles/external.css" />
+
+<mx:Button label="Autorotator Toggle" id="exampleButton" toggle="true"/>
+
+</example:Main>
