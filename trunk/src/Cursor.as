@@ -1,7 +1,6 @@
 package
 {
 		
-	import zephyr.utils.LayerEvent;
 	import flash.ui.Mouse;
 	import flash.events.*;
 	import flash.display.*;
@@ -79,7 +78,7 @@ package
 			ModuleLoader = ApplicationDomain.currentDomain.getDefinition("ModuleLoader") as Class;
 			ViewportBaseLayer = ApplicationDomain.currentDomain.getDefinition("org.papervision3d.view.layer.ViewportBaseLayer") as Class;
 			
-			parent.removeEventListener(LayerEvent.ALL_LAYERS_LOADED, layersReady);
+			parent.removeEventListener(BroadcastEvent.ALL_LAYERS_LOADED, layersReady);
 			
 			layerByName = Dictionary( parent["layerByName"] );
 			panoSalado = PanoSalado( layerByName["PanoSalado"] );

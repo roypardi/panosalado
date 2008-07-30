@@ -64,7 +64,6 @@ package
 						addChild( displayObject );
 					}
 				}
-				
 				dispatchEvent( new BroadcastEvent(BroadcastEvent.ALL_LAYERS_LOADED) );
 			}
 		}
