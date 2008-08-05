@@ -14,7 +14,17 @@ package zephyr
 
 	public class Main extends Application
 	{
-		public var exampleButton:Button;
+		public var autorotationToggle : Button;
+
+		public var leftButton : Button;
+		public var rightButton : Button;
+		public var upButton : Button;
+		public var downButton : Button;
+
+		public var zoomInButton : Button;
+		public var zoomOutButton : Button;
+
+		public var fullscreenToggle : Button;
 		
 		public var hitAreaCanvas:Canvas;
 		
@@ -34,30 +44,89 @@ package zephyr
 
 		public function Main()
 		{
-			init();
-		}
-		
-		protected function init():void
-		{
-			addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete);
+			addEventListener(FlexEvent.CREATION_COMPLETE, onCreationComplete, false, 0, true);
+			addEventListener(Event.ADDED_TO_STAGE, stageReady, false, 0, true);
 		}
 		
 		protected function onCreationComplete(event:FlexEvent):void
 		{
-			addEventListener(Event.ADDED_TO_STAGE, stageReady, false, 0, true);
+			
 		}
 
-		protected function onExampleButtonClick(event:MouseEvent):void
-		{
-			trace("example button clicked!", event.target);
-			
+		protected function buttonMouseDown(event:MouseEvent):void
+		{			
 			event.stopImmediatePropagation();
 			
-			panoSalado.execute("toggleAutorotator");
+			switch (event.target.name)
+			{
+				case( "autorotationToggle" ) :
+				panoSalado.execute("toggleAutorotator");
+				break;
+				case( "leftButton" ) :
+				panoSalado.execute("keyDown:left");
+				break;
+				case( "rightButton" ) :
+				panoSalado.execute("keyDown:right");
+				break;
+				case( "upButton" ) :
+				panoSalado.execute("keyDown:up");
+				break;
+				case( "downButton" ) :
+				panoSalado.execute("keyDown:down");
+				break;
+				case( "zoomInButton" ) :
+				panoSalado.execute("keyDown:shift");
+				break;
+				case( "zoomOutButton" ) :
+				panoSalado.execute("keyDown:control");
+				break;
+				case( "fullscreenToggle" ) :
+				panoSalado.execute("toggleFullscreen");
+				break;
+				
+			}
+			
+			
+		}
+		
+		protected function buttonMouseUp(event:MouseEvent):void
+		{			
+			event.stopImmediatePropagation();
+			
+			switch (event.target.name)
+			{
+				case( "autorotationToggle" ) :
+				panoSalado.execute("toggleAutorotator");
+				break;
+				case( "leftButton" ) :
+				panoSalado.execute("keyUp:left");
+				break;
+				case( "rightButton" ) :
+				panoSalado.execute("keyUp:right");
+				break;
+				case( "upButton" ) :
+				panoSalado.execute("keyUp:up");
+				break;
+				case( "downButton" ) :
+				panoSalado.execute("keyUp:down");
+				break;
+				case( "zoomInButton" ) :
+				panoSalado.execute("keyUp:shift");
+				break;
+				case( "zoomOutButton" ) :
+				panoSalado.execute("keyUp:control");
+				break;
+				case( "fullscreenToggle" ) :
+				panoSalado.execute("toggleFullscreen");
+				break;
+				
+			}
+			
+			
 		}
 		
 		protected function stageReady(e:Event):void
-		{
+		{ 
 			removeEventListener(Event.ADDED_TO_STAGE, stageReady);
 			
 			BroadcastEvent = ApplicationDomain.currentDomain.getDefinition("zephyr.BroadcastEvent") as Class;
@@ -65,18 +134,50 @@ package zephyr
 			ModuleLoader = ApplicationDomain.currentDomain.getDefinition("ModuleLoader") as Class;
 			
 			moduleLoader = ModuleLoader( parent.parent );
+
+			moduleLoader.addEventListener(BroadcastEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
 			
-			PanoSalado = ApplicationDomain.currentDomain.getDefinition("PanoSalado") as Class;
+			layersReady();
+			
+			autorotationToggle.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			leftButton.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			rightButton.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			upButton.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			downButton.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			zoomInButton.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			zoomOutButton.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			fullscreenToggle.addEventListener(MouseEvent.MOUSE_DOWN, buttonMouseDown, false, 0, true);
+			
+			autorotationToggle.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			leftButton.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			rightButton.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			upButton.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			downButton.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			zoomInButton.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			zoomOutButton.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+			fullscreenToggle.addEventListener(MouseEvent.MOUSE_UP, buttonMouseUp, false, 0, true);
+	
+			autorotationToggle.buttonMode = true ;
+			leftButton.buttonMode = true ;
+			rightButton.buttonMode = true ;
+			upButton.buttonMode = true ;
+			downButton.buttonMode = true ;
+			zoomInButton.buttonMode = true ;
+			zoomOutButton.buttonMode = true ;
+			fullscreenToggle.buttonMode = true ;
+		}
+
+		protected function layersReady(e:Event=null):void
+		{ 
 			
 			layerByName = Dictionary( moduleLoader["layerByName"] );
 			
+			PanoSalado = ApplicationDomain.currentDomain.getDefinition("PanoSalado") as Class;
+
 			panoSalado = PanoSalado( layerByName["PanoSalado"] );
-			
-			
+
 			settings = moduleLoader["xmlByName"]["Interface"];
-			
-			exampleButton.addEventListener(MouseEvent.MOUSE_DOWN, onExampleButtonClick);		
-			
+
 		}
 	}
 }
