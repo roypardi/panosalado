@@ -423,6 +423,9 @@ if ($action!="tile") {
     $hfov = 2 * rad2deg(atan(1 / ($pdat["imgframes1"]/4)));
     $vfov = 2 * rad2deg(atan(1 / $pdat["imgframes2"]));
     $baseindex = 10;
+    
+    $xml .= "\t\t\t\t<tiledCube  id='".$file."_pano' segments='9'>\n";
+    
     for ($panoelem = 0; $panoelem < count($tiles); $panoelem++) {
       // For each tile, add panoelement with inline image node
 
@@ -432,8 +435,8 @@ if ($action!="tile") {
       $fy_ofs = -$tiles[$panoelem]["center2"];
       if ($baseindex > $x_ofs) $baseindex = $x_ofs;
       
-      //width indexed to 100000 per tile
-      $wpt = 100000/((-$baseindex*2)+1);
+      $x_offset = $x_ofs - $baseindex;
+      $y_offset = $y_ofs - $baseindex;
       
       $W = $tiles[$panoelem]["orientation1"];
       $X = $tiles[$panoelem]["orientation2"];
@@ -443,45 +446,22 @@ if ($action!="tile") {
       if  ($W != 0 && $X == 0 && $Y == 0) {
 //        $pan = "0"; $tilt = "0";
         $face = "front";
-		$rotation = "rotationY='0'";
-		$x_pos = $wpt*$x_ofs;
-		$y_pos = -$wpt*$y_ofs;
-		$z_pos = "50000";
       } else if ($W > 0 && $X == 0 && $Y ==-$W) {
 //        $pan = "90"; $tilt = "0";
         $face = "right";
-		$rotation = "rotationY='90'";
-		$x_pos = "50000";
-		$y_pos = -$wpt*$y_ofs;
-		$z_pos = -$wpt*$x_ofs;
       } else if ($W == 0 && $X == 0 && $Y != 0) {
 //        $pan = "180"; $tilt = "0";
         $face = "back";
 		$rotation = "rotationY='180'";
-		$x_pos = -$wpt*$x_ofs;
-		$y_pos = -$wpt*$y_ofs;
-		$z_pos = "-50000";
       } else if ($W != 0 && $X == 0 && $Y == $W) {
 //        $pan = "-90"; $tilt = "0";
         $face = "left";
-		$rotation = "rotationY='-90'";
-		$x_pos = "-50000";
-		$y_pos = -$wpt*$y_ofs;
-		$z_pos = $wpt*$x_ofs;
       } else if ($W != 0 && $X == $W && $Y == 0) {
 //        $pan = "0"; $tilt = "90";
         $face = "up";
-		$rotation = "rotationX='90'";
-		$x_pos = $wpt*$x_ofs;
-		$y_pos = "50000";
-		$z_pos = $wpt*$y_ofs;
       } else if ($W != 0 && $X ==-$W && $Y == 0) {
 //        $pan = "0"; $tilt = "-90";
         $face = "down";
-		$rotation = "rotationX='-90'";
-		$x_pos = $wpt*$x_ofs;
-		$y_pos = "-50000";
-		$z_pos = -$wpt*$y_ofs;
       }
 
       
@@ -493,9 +473,7 @@ if ($action!="tile") {
       $imgsrc = "qtzrparse.php?mov=".$file."&amp;action=tile&amp;face=".$face."&amp;x_ofs=".$fx_ofs."&amp;y_ofs=".$fy_ofs;
 
       
-      $xml .= "\t\t\t<plane id='".$file.$panoelem."' ".$rotation." width='".$wpt."' height='".$wpt."' x='".$x_pos."' y='".$y_pos."' z='".$z_pos."' segments='".$segments."'>\n";
-      $xml .= "\t\t\t\t<file>".$imgsrc."</file>\n";
-      $xml .= "\t\t\t</plane>\n";
+      $xml .= "\t\t\t\t\t<tile face='".$face."' x_offset='".$x_offset."' y_offset='".$y_offset."'>".$imgsrc."</tile>\n";
       
       $JpegOfs[$face][$fx_ofs][$fy_ofs]["start"] = $stco["tile".($panoelem+1)];
       $JpegOfs[$face][$fx_ofs][$fy_ofs]["length"] = $stsz["tile".($panoelem+1)];
@@ -506,6 +484,8 @@ if ($action!="tile") {
       }
 /**/
     } 
+    $xml .= "\t\t\t\t</tiledCube>\n";
+    
 	$xml .= "\t\t\t</space>\n";
 	$xml .= "\t\t</spaces>\n";
 	$xml .= "\t</layer>\n";
