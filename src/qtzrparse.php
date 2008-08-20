@@ -408,11 +408,11 @@ if ($action!="tile") {
 	$xml .= "cameraMaximumPan='".$cameraMaximumPan."' ";
 	$xml .= "cameraMinimumTilt='".$cameraMinimumTilt."' ";
 	$xml .= "cameraMaximumTilt='".$cameraMaximumTilt."' ";
-	$xml .= "cameraMinimumZoom='".round($cuvw["cam5"]/10,4)."' ";
-	$xml .= "cameraMaximumZoom='".round($cuvw["cam6"]/10,4)."' ";
+	$xml .= "cameraMinimumZoom='".round($cuvw["cam5"]/20,4)."' ";
+	$xml .= "cameraMaximumZoom='".round($cuvw["cam6"]/20,4)."' ";
 	$xml .= "cameraPan='".-round($cuvw["cam7"],4)."' ";
 	$xml .= "cameraTilt='".-round($cuvw["cam8"],4)."' ";
-	$xml .= "cameraZoom='".round($cuvw["cam9"]/10,4)."' ";
+	$xml .= "cameraZoom='".round($cuvw["cam9"]/20,4)."' ";
 	$xml .= ">\n";
 
 	$xml .= "\t\t\t<space id='".$file."'>\n";
