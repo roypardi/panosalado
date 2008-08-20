@@ -416,6 +416,9 @@ if ($action!="tile") {
 	$xml .= ">\n";
 
 	$xml .= "\t\t\t<space id='".$file."'>\n";
+	
+	$segments = round ( (15 / count($tiles) / 6), 0);
+	if ($segments < 4) { $segments = 4; }
 
     $hfov = 2 * rad2deg(atan(1 / ($pdat["imgframes1"]/4)));
     $vfov = 2 * rad2deg(atan(1 / $pdat["imgframes2"]));
@@ -490,7 +493,7 @@ if ($action!="tile") {
       $imgsrc = "qtzrparse.php?mov=".$file."&amp;action=tile&amp;face=".$face."&amp;x_ofs=".$fx_ofs."&amp;y_ofs=".$fy_ofs;
 
       
-      $xml .= "\t\t\t<plane id='".$file.$panoelem."' ".$rotation." width='".$wpt."' height='".$wpt."' x='".$x_pos."' y='".$y_pos."' z='".$z_pos."' segments='2'>\n";
+      $xml .= "\t\t\t<plane id='".$file.$panoelem."' ".$rotation." width='".$wpt."' height='".$wpt."' x='".$x_pos."' y='".$y_pos."' z='".$z_pos."' segments='".$segments."'>\n";
       $xml .= "\t\t\t\t<file>".$imgsrc."</file>\n";
       $xml .= "\t\t\t</plane>\n";
       
