@@ -389,19 +389,33 @@ if ($action!="tile") {
 //         ."vlookatmin='$vlookatmin' "
 //         ."vlookatmax='$vlookatmax' "
 //       ."/>\n";
+	
+	if ( round($cuvw["cam1"],4) == "0" ) { $cameraMinimumPan = ""; } else { $cameraMinimumPan = round($cuvw["cam1"],4); }
+	if ( round($cuvw["cam2"],4) == "360" ) { $cameraMaximumPan = ""; } else { $cameraMaximumPan = round($cuvw["cam2"],4); }
+	if ( round($cuvw["cam3"],4) == "-90" ) { $cameraMinimumTilt = ""; } else { $cameraMinimumTilt = round($cuvw["cam3"],4); }
+	if ( round($cuvw["cam4"],4) == "90" ) { $cameraMaximumTilt = ""; } else { $cameraMaximumTilt = round($cuvw["cam4"],4); }
+
     //XML start
 	$xml = "<?xml version='1.0' encoding='utf-8'?>\n";
-	$xml .= "<PanoSalado onStart='loadSpace:".$file."'\n";
-	$xml .= "pan='".-round($cuvw["cam7"],4)."' tilt='".-round($cuvw["cam8"],4)."' minPan='".round($cuvw["cam1"],4)."' maxPan='".round($cuvw["cam2"],4)."' minTilt='".round($cuvw["cam3"],4)."' maxTilt='".round($cuvw["cam4"],4)."' ";
-	$xml .= "zoom='".round($cuvw["cam9"],4)."' zoomMin='".round($cuvw["cam5"],4)."' zoomMax='".round($cuvw["cam6"],4)."'";
-	$xml .=  "cameraContinuity='lock'  zoom='11' focus='100' zoomIncrement='0.2' keyIncrement='75' cameraSensitivity='60' cameraFriction='0.3' cameraThreshold='0.0001' ";
- 	$xml .=  "transition='3,alpha,0,Expo.easeInOutExpo' autorotator='true' autorotatorIncrement='0.25' autorotatorDelay='15000' dynamicQualityAdjustment='true' accelerating_precise='false' accelerating_precision='8'";
- 	$xml .=  "accelerating_smooth='false' accelerating_precise='true' accelerating_precision='32' decelerating_precise='true' decelerating_precision='8' decelerating_smooth='true' stopped_precise='true' stopped_precision='1' stopped_smooth='true'";
-    $xml .= ">\n";
-    
-    $xml.= "\t<description>Converted from ".$file."</description>\n";
-    
-    $xml .= "\t<".$file." onTransitionEnd='removeLastSpace'>\n";
+	$xml .= "<PanoSalado>\n";
+	
+	$xml.= "\t<layer id='PanoSalado' url='PanoSalado.swf' depth='0' onStart='loadSpace:".$file."'>\n";
+	
+	$xml .= "\t\t<spaces ";
+	$xml .= "transition='tween:currentSpace.viewport.alpha from 0 over 3 seconds using Expo.easeInOut then do spaces.onTransitionEnd' ";
+	$xml .= "onTransitionEnd='removeLastSpace' ";
+	$xml .= "cameraMinimumPan='".$cameraMinimumPan."' ";
+	$xml .= "cameraMaximumPan='".$cameraMaximumPan."' ";
+	$xml .= "cameraMinimumTilt='".$cameraMinimumTilt."' ";
+	$xml .= "cameraMaximumTilt='".$cameraMaximumTilt."' ";
+	$xml .= "cameraMinimumZoom='".round($cuvw["cam5"]/10,4)."' ";
+	$xml .= "cameraMaximumZoom='".round($cuvw["cam6"]/10,4)."' ";
+	$xml .= "cameraPan='".-round($cuvw["cam7"],4)."' ";
+	$xml .= "cameraTilt='".-round($cuvw["cam8"],4)."' ";
+	$xml .= "cameraZoom='".round($cuvw["cam9"]/10,4)."' ";
+	$xml .= ">\n";
+
+	$xml .= "\t\t\t<space id='".$file."'>\n";
 
     $hfov = 2 * rad2deg(atan(1 / ($pdat["imgframes1"]/4)));
     $vfov = 2 * rad2deg(atan(1 / $pdat["imgframes2"]));
@@ -476,9 +490,9 @@ if ($action!="tile") {
       $imgsrc = "qtzrparse.php?mov=".$file."&amp;action=tile&amp;face=".$face."&amp;x_ofs=".$fx_ofs."&amp;y_ofs=".$fy_ofs;
 
       
-      $xml .= "\t\t<plane id='".$file.$panoelem."' ".$rotation." width='".$wpt."' height='".$wpt."' x='".$x_pos."' y='".$y_pos."' z='".$z_pos."' segments='4'>\n";
-      $xml .= "\t\t\t<file>".$imgsrc."</file>\n";
-      $xml .= "\t\t</plane>\n";
+      $xml .= "\t\t\t<plane id='".$file.$panoelem."' ".$rotation." width='".$wpt."' height='".$wpt."' x='".$x_pos."' y='".$y_pos."' z='".$z_pos."' segments='2'>\n";
+      $xml .= "\t\t\t\t<file>".$imgsrc."</file>\n";
+      $xml .= "\t\t\t</plane>\n";
       
       $JpegOfs[$face][$fx_ofs][$fy_ofs]["start"] = $stco["tile".($panoelem+1)];
       $JpegOfs[$face][$fx_ofs][$fy_ofs]["length"] = $stsz["tile".($panoelem+1)];
@@ -489,8 +503,10 @@ if ($action!="tile") {
       }
 /**/
     } 
-    $xml .= "\t</".$file.">\n";
-    $xml .= "</PanoSalado>";
+	$xml .= "\t\t\t</space>\n";
+	$xml .= "\t\t</spaces>\n";
+	$xml .= "\t</layer>\n";
+	$xml .= "</PanoSalado>";
     //for ($panoelem = 0; $panoelem < count($tiles); $panoelem++)
 //     $tiledimagesize = count($JpegOfs["left"]) * $stsd["width"];
 //     $xml.= "\t<image type='CUBE' tiled='true' baseindex='$baseindex' tilesize='".$stsd["width"]."' tiledimagewidth='$tiledimagesize' tiledimageheight='$tiledimagesize'>\n";
