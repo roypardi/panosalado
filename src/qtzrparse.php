@@ -411,7 +411,7 @@ if ($action!="tile") {
 	$xml .= "cameraMinimumZoom='".round($cuvw["cam5"]/20,4)."' ";
 	$xml .= "cameraMaximumZoom='".round($cuvw["cam6"]/20,4)."' ";
 	$xml .= "cameraPan='".-round($cuvw["cam7"],4)."' ";
-	$xml .= "cameraTilt='".-round($cuvw["cam8"],4)."' ";
+	$xml .= "cameraTilt='".round($cuvw["cam8"],4)."' ";
 	$xml .= "cameraZoom='".round($cuvw["cam9"]/20,4)."' ";
 	$xml .= ">\n";
 
