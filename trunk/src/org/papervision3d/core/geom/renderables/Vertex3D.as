@@ -143,5 +143,10 @@ package org.papervision3d.core.geom.renderables
 			return null;
 		}
 		
+	public function toString(): String
+	{
+		return 'x:' + x + ' y:' + y + ' z:' + z;
+	}
+		
 	}
 }
