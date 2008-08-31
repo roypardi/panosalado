@@ -124,9 +124,9 @@ package org.papervision3d.materials
 
 				// Due to security reasons the BitmapData cannot access RTMP content like a NetStream using a FMS server.
 				// The next three lines are a simple but effective workaround to get pass Flash its security sandbox.
-				this.video.attachNetStream ( null );
+				//this.video.attachNetStream ( null );
 				this.bitmap.draw( this.video, myMatrix, this.video.transform.colorTransform );
-				this.video.attachNetStream ( this.stream );
+				//this.video.attachNetStream ( this.stream );
 			}catch(e:Error)
 			{
 				//
