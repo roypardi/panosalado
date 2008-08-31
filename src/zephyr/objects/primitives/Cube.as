@@ -203,7 +203,7 @@ package zephyr.objects.primitives {
 			if( ! (matInstance= materials.getMaterialByName( mat )))
 			{
 				if(!(matInstance=materials.getMaterialByName( "all" ))){
-					Papervision3D.log( "Cube: Required material not found in given materials list. Supported materials are: front, back, right, left, top, bottom & all." );
+					trace( "Cube: Required material not found in given materials list. Supported materials are: front, back, right, left, top, bottom & all." );
 					return;
 				}
 			}
