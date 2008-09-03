@@ -1,7 +1,7 @@
 ﻿package org.papervision3d.core.utils
 {
 
-	
+	import flash.utils.getQualifiedClassName;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -205,8 +205,9 @@
 		 */		
 		protected function handleMouseClick(e:MouseEvent):void
 		{
-			if( e is IVirtualMouseEvent ) return;
-			if( renderHitData && renderHitData.hasHit ) dispatchObjectEvent(InteractiveScene3DEvent.OBJECT_CLICK, currentDisplayObject3D);
+			if( !(e is IVirtualMouseEvent) ) return;
+			//if( e is MouseEvent ) return;
+			if( renderHitData && renderHitData.hasHit )  dispatchObjectEvent(InteractiveScene3DEvent.OBJECT_CLICK, currentDisplayObject3D); 
 		}
 		/**
 		 * Handles the MOUSE_CLICK event on an InteractiveSprite container

@@ -445,7 +445,7 @@ package org.papervision3d.core.utils.virtualmouse
 		 * @see release()
 		 * @see click()
 		 */
-		public function press():void {
+		public function press():void { trace( "VM: press" );
 			//if (_mouseIsDown) return;
 			updateMouseDown = true;
 			_mouseIsDown = true;
@@ -656,7 +656,7 @@ package org.papervision3d.core.utils.virtualmouse
 			
 			// move event
 			if (lastLocation.x != location.x || lastLocation.y != location.y) 
-			{				
+			{
 				var withinStage:Boolean = false;
 				if(stage) withinStage = (location.x >= 0 && location.y >= 0 && location.x <= stage.stageWidth && location.y <= stage.stageHeight);
 				
@@ -681,7 +681,7 @@ package org.papervision3d.core.utils.virtualmouse
 			// roll/mouse (out and over) events 
 			
 			if (currentTarget != target) 
-			{	
+			{	trace("over or out event");
 				// off of last target
 				if (!disabledEvents[MouseEvent.MOUSE_OUT]){
 					_lastEvent = new mouseEventEvent(MouseEvent.MOUSE_OUT, true, false, targetLocal.x, targetLocal.y, currentTarget, ctrlKey, altKey, shiftKey, _mouseIsDown, delta);
@@ -713,7 +713,7 @@ package org.papervision3d.core.utils.virtualmouse
 			
 			// click/up/down events
 			if (updateMouseDown) {
-				if (_mouseIsDown) {
+				if (_mouseIsDown) { 
 					
 					if (!disabledEvents[MouseEvent.MOUSE_DOWN]){
 						_lastEvent = new mouseEventEvent(MouseEvent.MOUSE_DOWN, true, false, currentTargetLocal.x, currentTargetLocal.y, currentTarget, ctrlKey, altKey, shiftKey, _mouseIsDown, delta);
@@ -725,7 +725,7 @@ package org.papervision3d.core.utils.virtualmouse
 					lastDownTarget = currentTarget;
 					updateMouseDown = false;
 				// mouse is up
-				}else{
+				}else{ 
 					if (!disabledEvents[MouseEvent.MOUSE_UP]){
 						_lastEvent = new mouseEventEvent(MouseEvent.MOUSE_UP, true, false, currentTargetLocal.x, currentTargetLocal.y, currentTarget, ctrlKey, altKey, shiftKey, _mouseIsDown, delta);
 						currentTarget.dispatchEvent(_lastEvent);
@@ -734,7 +734,7 @@ package org.papervision3d.core.utils.virtualmouse
 					
 					if (!disabledEvents[MouseEvent.CLICK] && currentTarget == lastDownTarget) {
 						_lastEvent = new mouseEventEvent(MouseEvent.CLICK, true, false, currentTargetLocal.x, currentTargetLocal.y, currentTarget, ctrlKey, altKey, shiftKey, _mouseIsDown, delta);
-						currentTarget.dispatchEvent(_lastEvent);
+						currentTarget.dispatchEvent(_lastEvent); 
 						dispatchEvent(_lastEvent);
 					}
 					
