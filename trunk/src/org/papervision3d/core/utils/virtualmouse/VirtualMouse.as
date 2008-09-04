@@ -445,7 +445,7 @@ package org.papervision3d.core.utils.virtualmouse
 		 * @see release()
 		 * @see click()
 		 */
-		public function press():void { trace( "VM: press" );
+		public function press():void {
 			//if (_mouseIsDown) return;
 			updateMouseDown = true;
 			_mouseIsDown = true;
@@ -681,7 +681,7 @@ package org.papervision3d.core.utils.virtualmouse
 			// roll/mouse (out and over) events 
 			
 			if (currentTarget != target) 
-			{	trace("over or out event");
+			{
 				// off of last target
 				if (!disabledEvents[MouseEvent.MOUSE_OUT]){
 					_lastEvent = new mouseEventEvent(MouseEvent.MOUSE_OUT, true, false, targetLocal.x, targetLocal.y, currentTarget, ctrlKey, altKey, shiftKey, _mouseIsDown, delta);
