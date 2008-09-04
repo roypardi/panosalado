@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	backgroundColor="#333333" backgroundAlpha="1"
+	pageTitle=" : Flex User Interface Example "
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:xx="com.fontvirus.*" 
+	layout="absolute"
+	addedToStage="addedToStageHandler()"
+	>
+<mx:Script>
+<![CDATA[
+	import zephyr.BroadcastEvent;
+	import flash.utils.Dictionary;
+	import flash.system.ApplicationDomain;
+	import flash.events.*;
+	
+	private var BroadcastEvent:Class;
+	private var ModuleLoader:Class;
+	private var PanoSalado:Class;
+	
+	private var moduleLoader:Object;
+	private var layerByName:Dictionary;
+	private var panoSalado:Object;
+	private var settings:XML
+	
+	
+	private function addedToStageHandler():void
+	{
+			BroadcastEvent = ApplicationDomain.currentDomain.getDefinition("zephyr.BroadcastEvent") as Class;
+			
+			ModuleLoader = ApplicationDomain.currentDomain.getDefinition("ModuleLoader") as Class;
+			
+			moduleLoader = ModuleLoader( parent.parent );
+
+			moduleLoader.addEventListener(BroadcastEvent.ALL_LAYERS_LOADED, layersReady, false, 0, true);
+			
+			layersReady();
+	}
+	
+	protected function layersReady(e:Event=null):void
+	{ 
+		
+		layerByName = Dictionary( moduleLoader["layerByName"] );
+		
+		PanoSalado = ApplicationDomain.currentDomain.getDefinition("PanoSalado") as Class;
+
+		panoSalado = PanoSalado( layerByName["PanoSalado"] );
+
+		settings = XML( moduleLoader["xmlByName"]["Interface"] );
+		
+		paperCanvas.addChild( panoSalado.viewports );
+
+	}
+]]>
+</mx:Script>
+
+<xx:Canvas3D id="paperCanvas" top="0" bottom="0" left="0" right="0" backgroundAlpha="0"/>
+
+</mx:Application>
