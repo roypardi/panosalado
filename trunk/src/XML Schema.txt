@@ -364,3 +364,18 @@ PanoSalado:
 
 										content:
 											path to qtvr .mov file
+											
+											
+											
+											
+Functions:
+
+loadSpace
+tween
+change
+removeLastSpace
+dispatchBroadcast
+keyUp
+keyDown
+toggleFullscreen
+toggleAutorotator

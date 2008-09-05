@@ -2,7 +2,7 @@ package
 {
 	import flash.display.*;
 	import flash.net.*;
-	import flash.events.Event;
+	import flash.events.*;
 	import flash.utils.Dictionary;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
@@ -23,6 +23,7 @@ package
 			xmlLoader.dataFormat = URLLoaderDataFormat.BINARY;
 			xmlLoader.load( new URLRequest( loaderInfo.parameters.xml?loaderInfo.parameters.xml:"PanoSalado.xml" ) );
 			xmlLoader.addEventListener(Event.COMPLETE, onXMLLoaded);
+			xmlLoader.addEventListener(IOErrorEvent.IO_ERROR, onIOError, false, 0, true);
 		}
 		
 		private function onXMLLoaded(e:Event):void
@@ -66,6 +67,11 @@ package
 				}
 				dispatchEvent( new BroadcastEvent(BroadcastEvent.ALL_LAYERS_LOADED) );
 			}
+		}
+		
+		private function onIOError(e:IOErrorEvent):void
+		{
+			trace("ModuleLoader: XML file " + loaderInfo.parameters.xml + " not found");
 		}
 	}
 }
