@@ -30,6 +30,7 @@ package com.fontvirus
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
+	import flash.events.*;
 	
 	import mx.core.UIComponent;	
 
@@ -51,6 +52,7 @@ package com.fontvirus
 		private function init():void
 		{
 			clipRect = new Rectangle();
+			addEventListener(Event.ADDED_TO_STAGE, stageReady, false, 0, true);
 		}
 		
 		override protected function createChildren():void
@@ -66,7 +68,7 @@ package com.fontvirus
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
-		{
+		{ 
 			super.updateDisplayList(unscaledWidth,unscaledHeight);		
 			drawBackground();
 			
@@ -119,6 +121,16 @@ package com.fontvirus
 		public function get canvas():Sprite
 		{
 			return paperSprite;
+		}
+		
+		private function stageReady(e:Event):void
+		{
+			stage.addEventListener(FullScreenEvent.FULL_SCREEN, fullscreen, false, 0, true);
+		}
+		
+		private function fullscreen(e:Event):void
+		{
+			updateDisplayList(stage.stageWidth, stage.stageHeight);
 		}
 	
 	}
