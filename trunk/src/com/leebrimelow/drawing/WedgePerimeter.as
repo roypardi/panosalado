@@ -40,7 +40,7 @@ package com.leebrimelow.drawing
 			
 			// Calculate the start point
 			ax = sx + Math.cos(angle) * radius;
-			ay = sy + Math.sin(-angle) * radius;
+			ay = sy + Math.sin(angle) * radius;
 			
 			// Draw the first line
 			//t.graphics.lineTo(ax, ay);

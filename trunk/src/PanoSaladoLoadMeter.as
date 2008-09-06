@@ -74,11 +74,11 @@ package
 			
 			meter.graphics.lineStyle(5, 0xFFFFFF);
 			
-			WedgePerimeter.draw(meter, stage.stageWidth*0.5, stage.stageHeight*0.5, radius, displayPercentage*360, 0 );
+			WedgePerimeter.draw(meter, stage.stageWidth*0.5, stage.stageHeight*0.5, radius, displayPercentage*360, -90 );
 			
 			meter.graphics.lineStyle(3, 0x000000);
 			
-			WedgePerimeter.draw(meter, stage.stageWidth*0.5, stage.stageHeight*0.5, radius, displayPercentage*360, 0 );
+			WedgePerimeter.draw(meter, stage.stageWidth*0.5, stage.stageHeight*0.5, radius, displayPercentage*360, -90 );
 			
 			//meter.graphics.endFill();
 			
