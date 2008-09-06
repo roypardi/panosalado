@@ -12,6 +12,8 @@ package zephyr
 		public static const SHOW_TOOLTIP : String = "showTooltip";
 		public static const HIDE_TOOLTIP : String = "hideTooltip";
 		
+		public static const LOAD_PROGRESS : String = "loadProgress";
+		
 		public var info:Object;
 		
 		public function BroadcastEvent( type:String, info:Object=null )
