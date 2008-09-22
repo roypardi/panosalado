@@ -66,11 +66,7 @@
 		
 		public function destroy():void
 		{
-			viewport = null;
-			renderHitData = null;
-			currentDisplayObject3D = null;
-			currentMaterial = null;
-			currentMouseDO3D = null;
+			
 			
 			container.removeEventListener(MouseEvent.MOUSE_DOWN, handleMousePress);
 			container.removeEventListener(MouseEvent.MOUSE_UP, handleMouseRelease);
@@ -79,6 +75,12 @@
 			if (container.stage)
 				container.stage.removeEventListener(Event.ENTER_FRAME, handleEnterFrame);
 			container = null;
+			
+			viewport = null;
+			renderHitData = null;
+			currentDisplayObject3D = null;
+			currentMaterial = null;
+			currentMouseDO3D = null;
 		}
 		
 		public function init():void
