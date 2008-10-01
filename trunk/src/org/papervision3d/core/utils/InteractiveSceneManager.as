@@ -64,6 +64,12 @@
 			init();
 		}
 		
+		public function removeEnterFrameListener():void
+		{
+			if (container.stage)
+				container.stage.removeEventListener(Event.ENTER_FRAME, handleEnterFrame);
+		}
+		
 		public function destroy():void
 		{
 			

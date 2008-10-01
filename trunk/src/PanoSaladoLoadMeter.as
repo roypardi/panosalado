@@ -59,7 +59,16 @@ package
 			
 			for (var id:String in percentages)
 			{
-				bytesTotal += Number( percentages[id] );
+				var individualPercentage:Number = Number( percentages[id] );
+				
+				if (individualPercentage > 0.999)
+				{
+					percentages[id] = null;
+					
+					continue;
+				}
+				
+				bytesTotal += individualPercentage;
 				
 				overItems++;
 			}
