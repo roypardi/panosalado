@@ -131,7 +131,7 @@
 				container.addEventListener(MouseEvent.MOUSE_UP, handleMouseRelease, false, 0, true);
 				container.addEventListener(MouseEvent.CLICK, handleMouseClick, false, 0, true);
 				container.addEventListener(MouseEvent.DOUBLE_CLICK, handleMouseDoubleClick, false, 0, true);
-				container.stage.addEventListener(Event.ENTER_FRAME, handleEnterFrame);
+				container.stage.addEventListener(Event.ENTER_FRAME, handleEnterFrame, false, 0, true);
 				
 			}
 		}
