@@ -50,8 +50,8 @@ package
 		
 		private function onProgress(e:BroadcastEvent):void
 		{
-			
-			percentages[e.info.id] = e.info.percentLoaded;
+			if (e.info.percentLoaded > 0)
+				percentages[e.info.id] = e.info.percentLoaded;
 			
 			var bytesTotal:Number = 0;
 			
@@ -61,38 +61,33 @@ package
 			{
 				var individualPercentage:Number = Number( percentages[id] );
 				
-				if (individualPercentage > 0.999)
-				{
-					percentages[id] = null;
-					
-					continue;
-				}
-				
 				bytesTotal += individualPercentage;
 				
 				overItems++;
 			}
 			
-			var displayPercentage:Number = bytesTotal/overItems;
+			var displayPercentage:Number = (overItems > 0) ? bytesTotal/overItems : 0 ;
 			
-			var radius:Number = 25;
+			var radius:Number = 10;
 			
 			meter.graphics.clear();
 			
 			//meter.graphics.beginFill(0xFF0000);
 			
-			meter.graphics.lineStyle(5, 0xFFFFFF);
+			meter.graphics.lineStyle(3, 0xFFFFFF);
 			
 			WedgePerimeter.draw(meter, stage.stageWidth*0.5, stage.stageHeight*0.5, radius, displayPercentage*360, -90 );
 			
-			meter.graphics.lineStyle(3, 0x000000);
+			meter.graphics.lineStyle(1, 0x000000);
 			
 			WedgePerimeter.draw(meter, stage.stageWidth*0.5, stage.stageHeight*0.5, radius, displayPercentage*360, -90 );
 			
 			//meter.graphics.endFill();
 			
 			if (displayPercentage > 0.999)
+			{
 				percentages = new Object();
+			}
 			
 			if (displayPercentage > 0.999 || displayPercentage < 0.001)
 				meter.visible = false;
