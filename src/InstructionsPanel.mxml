@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple custom MXML TitleWindow component.
+     The TitleWindowApp application displays this component. 
+     You cannot run it independently. -->
+     
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+    title="Instructions" showCloseButton="true"
+	close="PopUpManager.removePopUp(this);"
+		width="300" height="75%">
+		
+	<mx:Script>
+    	import mx.managers.PopUpManager;
+	</mx:Script>
+	
+	<mx:Text width="100%">
+		<mx:htmlText>
+<![CDATA[
+<b>Mouse Controls</b>
+Pan by clicking and dragging on the content.
+Zoom with the scroll wheel.
+
+<b>Keyboard Controls</b>
+Use arrow keys to pan and tilt.
+Use shift key to zoom in, control key (command on Mac) to zoom out.
+Play/pause using the spacebar.
+]]>
+		</mx:htmlText>
+	</mx:Text>
+	<mx:Button label="close" click="PopUpManager.removePopUp(this);"/>
+</mx:TitleWindow>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	pageTitle="VideoWarp Player"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:zephyr="zephyr.*" 
+	layout="absolute"
+	styleName="plain" 
+	backgroundColor="black"
+	usePreloader="false"
+  	creationComplete="init()"
+	applicationComplete="appComplete()"
+	frameRate="60"
+	autoLayout="true"
+	>
+	
+	<mx:Script source="VideoWarpPlayer.as" />	
+	<mx:Style source="styles/VideoWarpPlayerStyle.css" />
+	
+	<mx:XMLList id="menuTree">
+		<node label="About..." action="about" />
+		<node label="Instructions..." action="instructions" />
+		<node label="Full Screen" action="fullscreen" />
+    </mx:XMLList>
+
+	<mx:VBox width="100%" height="100%" verticalGap="0" horizontalGap="0">
+		<zephyr:PanoSaladoCanvas3D height="100%" width="100%" id="paperCanvas" 
+			creationComplete="initPaperCanvas()" />
+		<mx:HBox id="playbackControls" height="24" width="100%" verticalGap="0" horizontalGap="0"
+			styleName="playbackControls">
+			<mx:Button id="btn_playPause" label="" height="24" width="32" minWidth="32"
+				click="playPause();" styleName="playButton"/>
+			<mx:PopUpButton id="btn_volume" label="" height="24" width="32"
+				creationComplete="initVolumePopUp();" 
+				styleName="popupButton" popUpStyleName="volumePopUp" 
+				icon="{volumeIcon}" downIcon="{volumeActiveIcon}" />
+	        <mx:Label id="tf_playtimeDisplay" width="48" 
+				paddingRight="6" styleName="timeLabel" text="0:00" />
+
+			<mx:Canvas height="24" width="100%">
+				<mx:ProgressBar id="downloadProgress" label="" mode="manual"
+					minimum="0" maximum="100"
+					width="100%" y="7" height="10" trackHeight="10" 
+					styleName="playbarProgress" /> 
+	
+				<mx:HSlider id="playbackProgress" 
+					y="2" height="18" 
+					value="{paperCanvas.currentVideo.playheadTime}" 
+			    	width="{(this.downloadProgress.value/this.videoFileTotalBytes)*this.downloadProgress.width}"
+			    	minimum="0"
+			    	maximum="{paperCanvas.currentVideo.totalTime * (this.downloadProgress.value/this.videoFileTotalBytes)}"
+					change="if (event.clickTarget=='track') { paperCanvas.currentVideo.playheadTime = event.value; }"
+			    	thumbPress="if(paperCanvas.currentVideo.playing){paperCanvas.currentVideo.pause();}" 
+			    	thumbDrag="this.seekTo=this.playbackProgress.value" 
+			    	thumbRelease="paperCanvas.currentVideo.playheadTime = this.seekTo; paperCanvas.currentVideo.play();"
+			    	liveDragging="true"
+					slideDuration="0"
+					styleName="playbarSlider"
+					sliderThumbClass="com.eyesee360.LargeSliderThumb"
+			    	/>
+			</mx:Canvas>
+
+	        <mx:Label id="tf_durationDisplay" width="48" 
+				paddingLeft="6" textAlign="left" styleName="timeLabel"
+				text="0:00" />
+				
+			<!-- Disabled until functional
+			<mx:Button label="" height="24" width="32"
+				icon="@Embed(source='images/zoom.png')"
+				downIcon="@Embed(source='images/zoom-active.png')"
+				skin="mx.skins.ProgrammaticSkin"
+				enabled="false" />
+			 -->
+			
+			<mx:PopUpMenuButton id="btn_menu" styleName="popupButton"
+				label="" height="24" width="32"
+				creationComplete="initMenu();"
+				icon="@Embed(source='images/menu.png')"
+				downIcon="@Embed(source='images/menu-active.png')"
+				popUpStyleName="menu"
+				openAlways="true" dataProvider="{menuTree}" labelField="@label" />
+		</mx:HBox>
+	</mx:VBox>
+
+</mx:Application>

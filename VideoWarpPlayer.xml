@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2005-2007 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<flex-config>
+	<!-- Specifies the minimum player version that will run the compiled SWF. -->
+	<!-- 9.0.124 is the April 2008 security release -->
+	<target-player>9.0.124</target-player>
+
+	<!-- runtime-shared-library-path: specifies a SWC or directory to link against and an RSL URL to load with optional failover URLs -->
+	<runtime-shared-library-path>
+		<path-element>/Developer/SDKs/flex_sdk_3/frameworks/libs/framework.swc</path-element>
+		<rsl-url>framework_3.2.0.3794.swz</rsl-url>
+		<policy-file-url></policy-file-url>
+		<rsl-url>framework_3.2.0.3794.swf</rsl-url>
+		<policy-file-url></policy-file-url>
+	</runtime-shared-library-path>
+	<!-- static-link-runtime-shared-libraries: statically link the libraries specified by the -runtime-shared-libraries-path option.-->
+	<static-link-runtime-shared-libraries>false</static-link-runtime-shared-libraries>
+
+	<!-- target-player: specifies the version of the player the application is targeting.
+							  Features requiring a later version will not be compiled into the application.
+							  The minimum value supported is "9.0.0".-->
+	<!-- target-player usage:
+	<target-player>version</target-player>
+	-->
+
+	<!-- Enables SWFs to access the network. -->
+	<use-network>true</use-network>
+
+	<!-- Metadata added to SWFs via the SWF Metadata tag. -->
+	<metadata>
+		<title>VideoWarp Player</title>
+		<description>http://www.adobe.com/products/flex</description>
+		<publisher>EyeSee360</publisher>
+		<creator>Michael Rondinelli</creator>
+		<language>EN</language>
+	</metadata>
+
+	<!-- licenses: specifies a list of product and serial number pairs. -->
+	<!-- not set -->
+	<!--
+	<licenses>
+		<license>
+			<product>string</product>
+			<serial-number>number</serial-number>
+		</license>
+	</licenses>
+	-->
+
+</flex-config>
