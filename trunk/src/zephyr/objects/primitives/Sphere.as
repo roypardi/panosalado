@@ -24,6 +24,26 @@ package zephyr.objects.primitives {
 		private var segmentsH :Number;
 		
 		/**
+		* Minimum pan angle (in degrees) for sphere geometry. Defaults to 0.
+		*/
+		private var minPan :Number;
+		
+		/**
+		* Range of pan angles (in degrees) for sphere geometry. Defaults to 360.
+		*/
+		private var panRange :Number;
+        
+		/**
+		* Minimum tilt angle (in degrees) for sphere geometry. Defaults to -90.
+		*/
+		private var minTilt :Number;
+        
+		/**
+		* Range of tilt angles (in degrees) for sphere geometry. Defaults to 180.
+		*/
+		private var tiltRange :Number;
+        
+		/**
 		* Reverse
 		*/
 		private var reverse :Boolean;
@@ -79,7 +99,7 @@ package zephyr.objects.primitives {
 		* @param	segmentsH	[optional] - Number of segments vertically. Defaults to 6.
 		* <p/>
 		*/
-		public function Sphere( material:MaterialObject3D=null, radius:Number=100, segmentsW:int=8, segmentsH:int=6, reverse:Boolean=true )
+		public function Sphere( material:MaterialObject3D=null, radius:Number=100, segmentsW:int=8, segmentsH:int=6, reverse:Boolean=true, minPan:Number=0.0, panRange:Number=360.0, minTilt:Number=-90.0, tiltRange:Number=180.0 )
 		{
 			super( material, new Array(), new Array(), null );
 	
@@ -87,10 +107,15 @@ package zephyr.objects.primitives {
 			this.segmentsH = Math.max( MIN_SEGMENTSH, segmentsH || DEFAULT_SEGMENTSH); // Defaults to 6
 			if (radius==0) radius = DEFAULT_RADIUS; // Defaults to 100
 			
+			this.minPan = Math.PI / 180.0 * minPan;
+			this.panRange = Math.PI / 180.0 * Math.min(360.0, panRange); // Don't allow range > 360.0
+			this.minTilt = Math.PI / 180.0 * minTilt;
+			this.tiltRange = Math.PI / 180.0 * Math.min(180.0, Math.max(-180.0, tiltRange)); // -180 <= TiltRange <= 180
+			
 			this.reverse = reverse;
 			
 			var scale :Number = DEFAULT_SCALE;
-	
+		
 			buildSphere( radius );
 		}
 	
@@ -104,52 +129,62 @@ package zephyr.objects.primitives {
 			var aVertice:Array = this.geometry.vertices;
 			var aFace:Array = this.geometry.faces;
 			var aVtc:Array = new Array();
-			for (j=0;j<(iVer+1);j++) { // vertical
-				var fRad1:Number = Number(j/iVer);
-				var fZ:Number = -fRadius*Math.cos(fRad1*Math.PI);
-				var fRds:Number = fRadius*Math.sin(fRad1*Math.PI);
+			var bZenith:Boolean = (this.minTilt + this.tiltRange >= Math.PI);
+			var bNadir:Boolean =  (this.minTilt <= -Math.PI);
+
+			// Sine lookup tables for performance
+			var horSinLUT:Array = new Array();
+			var horCosLUT:Array = new Array();
+			for (i=0;i<iHor;i++) { // horizontal
+			    var fRad2:Number = this.minPan + this.panRange*i/iHor;
+				horSinLUT.push(Math.sin(fRad2));
+				horCosLUT.push(Math.cos(fRad2));
+			}
+			for (j=0;j<=iVer;j++) { // vertical
+				var fRad1:Number = this.minTilt + this.tiltRange*j/iVer;
+				var fZ:Number = fRadius*Math.sin(fRad1);
+				var fRds:Number = fRadius*Math.cos(fRad1);
 				var aRow:Array = new Array();
 				var oVtx:Vertex3D;
 				for (i=0;i<iHor;i++) { // horizontal
-					var fRad2:Number = Number(2*i/iHor);
-					var fX:Number = fRds*Math.sin(fRad2*Math.PI);
-					var fY:Number = rev*fRds*Math.cos(fRad2*Math.PI);
-					if (!((j==0||j==iVer)&&i>0)) { // top||bottom = 1 vertex
-						oVtx = new Vertex3D(fY,fZ,fX);
-						aVertice.push(oVtx);
+					var fX:Number = fRds*horSinLUT[i];
+					var fY:Number = rev*fRds*horCosLUT[i];
+					var bMakeVertex:Boolean = true;
+					if ((bNadir && j==0) || (bZenith && j==iVer)) {
+					    bMakeVertex = (i == 0);
+					}
+					if (bMakeVertex) {
+    					oVtx = new Vertex3D(fY,fZ,fX);
+    					aVertice.push(oVtx);
 					}
 					aRow.push(oVtx);
 				}
 				aVtc.push(aRow);
 			}
 			var iVerNum:int = aVtc.length;
-			for (j=0;j<iVerNum;j++) {
+			for (j=1;j<iVerNum;j++) {
 				var iHorNum:int = aVtc[j].length;
-				if (j>0) { // &&i>=0
-					for (i=0;i<iHorNum;i++) {
-						// select vertices
-						var bEnd:Boolean = i==(iHorNum-0);
-						var aP1:Vertex3D = aVtc[j][bEnd?0:i];
-						var aP2:Vertex3D = aVtc[j][(i==0?iHorNum:i)-1];
-						var aP3:Vertex3D = aVtc[j-1][(i==0?iHorNum:i)-1];
-						var aP4:Vertex3D = aVtc[j-1][bEnd?0:i];
-						// uv
-						/*
-						 * fix applied as suggested by Philippe to correct the uv mapping on a sphere
-						 * */
-						var fJ0:Number = j		/ (iVerNum-1);
-						var fJ1:Number = (j-1)	/ (iVerNum-1);
-						var fI0:Number = (i+1)	/ iHorNum;
-						var fI1:Number = i		/ iHorNum;
-						var aP4uv:NumberUV = new NumberUV(fI0,fJ1);
-						var aP1uv:NumberUV = new NumberUV(fI0,fJ0);
-						var aP2uv:NumberUV = new NumberUV(fI1,fJ0);
-						var aP3uv:NumberUV = new NumberUV(fI1,fJ1);
-						// 2 faces
-						if (j<(aVtc.length-1))	aFace.push( new Triangle3D(this, new Array(aP1,aP2,aP3), material, new Array(aP1uv,aP2uv,aP3uv)) );
-						if (j>1)				aFace.push( new Triangle3D(this, new Array(aP1,aP3,aP4), material, new Array(aP1uv,aP3uv,aP4uv)) );
-	
-					}
+				for (i=0;i<iHorNum;i++) {
+					// select vertices
+					var aP1:Vertex3D = aVtc[j][i];
+					var aP2:Vertex3D = aVtc[j][(i==0?iHorNum:i)-1];
+					var aP3:Vertex3D = aVtc[j-1][(i==0?iHorNum:i)-1];
+					var aP4:Vertex3D = aVtc[j-1][i];
+					// uv
+					/*
+					 * fix applied as suggested by Philippe to correct the uv mapping on a sphere
+					 * */
+					var fJ0:Number = j		/ (iVerNum-1);
+					var fJ1:Number = (j-1)	/ (iVerNum-1);
+					var fI0:Number = (i+1)	/ iHorNum;
+					var fI1:Number = i		/ iHorNum;
+					var aP4uv:NumberUV = new NumberUV(fI0,fJ1);
+					var aP1uv:NumberUV = new NumberUV(fI0,fJ0);
+					var aP2uv:NumberUV = new NumberUV(fI1,fJ0);
+					var aP3uv:NumberUV = new NumberUV(fI1,fJ1);
+					// 2 faces
+					if (!bNadir || j<(aVtc.length-1)) aFace.push( new Triangle3D(this, new Array(aP1,aP2,aP3), material, new Array(aP1uv,aP2uv,aP3uv)) );
+					if (!bZenith || j>1)			  aFace.push( new Triangle3D(this, new Array(aP1,aP3,aP4), material, new Array(aP1uv,aP3uv,aP4uv)) );
 				}
 			}
 			this.geometry.ready = true;

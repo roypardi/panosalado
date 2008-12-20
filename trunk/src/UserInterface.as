@@ -140,7 +140,7 @@ import flash.text.*
 			// and have received the All OK from our container,
 			// let's set our targets for:
 			// the container...
-			moduleLoader = ModuleLoader( parent );
+			moduleLoader = ModuleLoader.moduleLoader;
 		
 			layerByName = Dictionary( parent["layerByName"] );
 			// the panorama...
