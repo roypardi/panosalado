@@ -15,7 +15,7 @@ package
 	public class ModuleLoader extends Sprite
 	{
 	    // Use the singleton pattern for module loader
-	    private static var _instance:ModuleLoader = null;
+	    public static var _instance:ModuleLoader;
 	    
 		private var settings:XML;
 //		private var itemsToLoad:int = 0;
@@ -30,6 +30,11 @@ package
 		
 		public var bulkLoader:BulkLoader = new BulkLoader("moduleLoaderBulkLoader");
 		
+        public static function get instance():ModuleLoader
+        {
+            return _instance;
+        }
+		
 		public function ModuleLoader()
 		{
 		    if (_instance != null) {
@@ -37,18 +42,14 @@ package
             } else {
     			var xmlLoader:URLLoader = new URLLoader();
     			xmlLoader.dataFormat = URLLoaderDataFormat.BINARY;
-    			xmlLoader.load( new URLRequest( loaderInfo.parameters.xml?loaderInfo.parameters.xml:"PanoSalado.xml" ) );
+    			xmlLoader.load( new URLRequest( loaderInfo.parameters.xml ? 
+    			    loaderInfo.parameters.xml : "PanoSalado.xml" ) );
     			xmlLoader.addEventListener(Event.COMPLETE, onXMLLoaded);
     			xmlLoader.addEventListener(IOErrorEvent.IO_ERROR, onIOError, false, 0, true);
     			_instance = this;
 			}
 		}
 
-        public static function get moduleLoader():ModuleLoader
-        {
-            return _instance;
-        }
-		
 		private function onIOError(e:IOErrorEvent):void
 		{
 			trace("ModuleLoader: XML file " + loaderInfo.parameters.xml + " not found");
