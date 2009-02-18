@@ -9,7 +9,6 @@ FlexUserInterface.mxml:
 - Keyboard bindings for playback
 
 General:
-- Remove ModuleLoader as a requirement.
 - Support interpreting XML from an image or stream metadata.
 - Reduce file size.
 - Improve playback frame rate when idle

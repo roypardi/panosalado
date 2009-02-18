@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<commercial:PanoSaladoApplication 
+	pageTitle=" : Flex User Interface Example "
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:zephyr="zephyr.*" 
+	xmlns:commercial="commercial.flexinterfaces.elements.*"
+	layout="absolute"
+	usePreloader="false"
+	backgroundAlpha="0"
+	>
+	
+	<zephyr:PanoSaladoCanvas3D id="paperCanvas" top="0" bottom="0" left="0" right="0" backgroundAlpha="0"/>
+	
+		<!-- commercial:PanoSaladoWatermarkButton label="Powered by SpinControl:PanoSalado" styleName="watermark" / -->
+			
+		<commercial:PanoSaladoControlBar id="panoSaladoControlBar" styleName="panoSaladoControlBar">
+		
+			<commercial:PanoSaladoPanLeftButton id="panoSaladoPanLeftButton" />
+			
+			<commercial:PanoSaladoPanRightButton id="panoSaladoPanRightButton" />
+	
+			<commercial:PanoSaladoTiltUpButton id="panoSaladoTiltUpButton" />
+			
+			<commercial:PanoSaladoTiltDownButton id="panoSaladoTiltDownButton" />
+	
+			<commercial:PanoSaladoZoomInButton id="panoSaladoZoomInButton" />
+			
+			<commercial:PanoSaladoZoomOutButton id="panoSaladoZoomOutButton" />
+			
+			<commercial:PanoSaladoAutorotateToggleButton id="panoSaladoAutorotateToggleButton" />
+			<commercial:PanoSaladoFullscreenToggleButton id="panoSaladoFullscreenToggleButton" />		
+		
+		
+		</commercial:PanoSaladoControlBar>
+		
+		<!--
+		
+		<commercial:PanoSaladoAudioToggleButton id="panoSaladoAudioToggleButton" />
+		
+		<commercial:PanoSaladoControlBar id="combocontainer" styleName="comboContainer" resize="panoSaladoComboBox.width = combocontainer.width">
+			<commercial:PanoSaladoComboBox id="panoSaladoComboBox" />
+		</commercial:PanoSaladoControlBar>		
+		
+		<commercial:PanoSaladoCaption id="panoSaladoCaption" />
+		
+		<commercial:PanoSaladoCopyright id="panoSaladoCopyright" />
+		<commercial:PanoSaladoCopyrightButton id="panoSaladoCopyrightButton" />
+		
+		<commercial:PanoSaladoFloorPlan id="panoSaladoFloorPlan" />
+		<commercial:PanoSaladoFloorplanToggleButton id="panoSaladoFloorplanToggleButton" />
+		<commercial:PanoSaladoFloorplanPin id="floorplanpin" />
+		
+		<commercial:PanoSaladoVideo id="panoSaladoVideo" />
+		<commercial:PanoSaladoVideoToggleButton id="panoSaladoVideoToggleButton" />
+		
+		<commercial:PanoSaladoThumbnailList id="panoSaladoThumbnailList" />
+		<commercial:PanoSaladoThumbnailListToggleButton id="panoSaladoThumbnailListToggleButton" />
+		<commercial:PanoSaladoThumbnailButton id="panoSaladoThumbnailButton" />
+		
+		<commercial:PanoSaladoNavigateToURLToggleButton id="panoSaladoNavigateToURLToggleButton" />
+		
+		<commercial:PanoSaladoNextButton id="panoSaladoNextButton" />
+		<commercial:PanoSaladoPreviousButton id="panoSaladoPreviousButton" />
+		
+		<commercial:PanoSaladoSpacer id="panoSaladoSpacer" />
+		
+		-->
+
+	
+		<mx:Script>
+		<![CDATA[
+		
+		override protected function initializationComplete():void
+		{
+			super.recursiveGetChildren(this);
+			
+			super.initializationComplete();
+		}
+		
+
+		]]>
+	</mx:Script>
+
+</commercial:PanoSaladoApplication>

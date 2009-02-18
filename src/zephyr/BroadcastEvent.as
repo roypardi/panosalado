@@ -32,6 +32,8 @@ package zephyr
 		public static const STOP_VIDEO : String = "stopVideo";
 		public static const VIDEO_PLAYING : String = "videoPlaying";
 		public static const VIDEO_STOPPED : String = "videoStopped";
+		public static const ENABLE_VIDEO_TOGGLE_BUTTON : String = "enableVideoToggleButton";
+		public static const DISABLE_VIDEO_TOGGLE_BUTTON : String = "disableVideoToggleButton";
 		
 		public static const PLAY_AUDIO : String = "playAudio";
 		public static const STOP_AUDIO : String = "stopAudio";

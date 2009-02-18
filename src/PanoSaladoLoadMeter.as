@@ -17,8 +17,6 @@ package
 		
 		private var ModuleLoader:Class;
 		
-		//private var BroadcastEvent:Class;
-		
 		private var moduleLoader:Object;
 		
 		private var meter:Sprite = new Sprite();
