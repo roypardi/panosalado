@@ -1,0 +1,574 @@
+/* SCROLL BAR STYLING IS ACROSS BOARD... SEE BOTTOM SELECTORS */
+
+/* FONT EMBEDDING
+@font-face 
+{ 
+	font-family: Arial Narrow Embedded;
+	fontWeight: normal ;
+	src: url("PATH/TO/YOUR/FONT");
+	unicode-range:
+		U+0020-U+0040, 
+
+		U+0041-U+005A, 
+		U+005B-U+0060, 
+		U+0061-U+007A, 
+		U+007B-U+007E; 
+}
+@font-face 
+{
+	font-family: Arial Narrow Embedded;
+	fontWeight: bold ;
+	src: url("PATH/TO/YOUR/FONT");
+	unicode-range:
+		U+0020-U+0040, 
+		U+0041-U+005A, 
+		U+005B-U+0060, 
+		U+0061-U+007A, 
+		U+007B-U+007E; 
+
+} 
+*/
+
+/*
+		U+0020-U+0040,  Punctuation, Numbers 
+		U+0041-U+005A,  Upper-Case A-Z 
+		U+005B-U+0060,  Punctuation and Symbols 
+		U+0061-U+007A,  Lower-Case a-z 
+		U+007B-U+007E;  Punctuation and Symbols 
+*/
+
+/* APPLICATION */
+PanoSaladoApplication {
+
+}
+/* WATERMARK */
+PanoSaladoWatermarkButton {
+	
+}
+ .watermark {
+  	cornerRadius: 0;
+	borderAlpha: 1;
+	borderColors: #FFFFFF, #FFFFFF;
+    overBorderColors: #FFFFFF, #FFFFFF;
+    selectedBorderColors: #FFFFFF, #FFFFFF;
+    borderThickness: 2;
+	fillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    fillAlphas: 0.9, 0.9, 0.9, 0.9;
+	/* themeColor: #c1c5bb; */
+	overFillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    overFillAlphas: 0.9, 0.9, 0.9, 0.9;
+	selectedFillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    selectedFillAlphas: 0.9, 0.9, 0.9, 0.9;
+    
+	verticalGap: 0;
+	highlightAlphas: 0, 0 ;
+	
+	paddingLeft: 3;
+	paddingRight: 3;
+	paddingBottom: 3;
+	paddingTop: 3; 
+	textRollOverColor: #000000;
+	
+	fontFamily: Arial Narrow Embedded;
+	fontWeight: normal;
+	color: #333333;
+	fontSize: 10;
+	kerning: true;
+	letterSpacing: 2;
+	top: 10;
+	right: 0;
+} 
+
+/* SPACER */
+PanoSaladoSpacer {
+	percent-width:100;
+	
+	weight:15;
+}
+
+/* TOOLTIP */
+ToolTip {
+	backgroundColor: #FFFFFF;
+	backgroundAlpha: 0.90;
+	fontFamily: Arial Narrow Embedded;
+	kerning: true;
+	letterSpacing: 2;
+	color: #333333;
+	fontSize: 9;
+}
+
+HTMLToolTip
+{
+	backgroundColor: #FFFFFF;
+	backgroundAlpha: 0.95;
+	borderColor: #919999;
+	borderSkin: ClassReference("commercial.flexinterfaces.elements.TailToolTipBorder");
+	borderStyle: "tailTipRight";
+	/* taillessTip tailTipAbove tailTipBelow tailTipAboveLeft tailTipBelowLeft */
+	cornerRadius: 2;
+	fontFamily: Arial Narrow Embedded;
+	color: #333333;
+	kerning: true;
+	letterSpacing: 2;
+	fontSize: 9;
+	paddingBottom: 2;
+	paddingLeft: 4;
+	paddingRight: 4;
+	paddingTop: 2;
+	shadowColor: #000000;
+}
+
+/* NAVIGATION ELEMENTS */
+/* THUMBNAIL LIST */
+PanoSaladoThumbnailButton {
+
+}
+PanoSaladoThumbnailListToggleButton {
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/thumbnail_list.png");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/thumbnail_list.png");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/thumbnail_list.png");
+	selectedUpIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/thumbnail_list.png");
+	selectedDownIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/thumbnail_list.png");
+	selectedOverIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/thumbnail_list.png");
+		
+	weight:5;
+}
+PanoSaladoThumbnailList {
+	boxStyleName: "thumbnailBox";
+	thumbnailsStyleName: "thumbnails"; 
+	maximumHeight:400;
+}
+.thumbnailBox {
+	direction: horizontal;
+	
+	width:300;	
+	
+	/* maximumWidth:400;
+	maximumHeight:400; */
+}
+
+.thumbnails {
+	
+}
+/* used by thumbnailbutton */
+PanoSaladoEnhancedCanvasButton {
+
+}
+
+/* floorplan and pin */
+PanoSaladoFloorplan {
+	bottom: 40;
+	left: 10;
+	
+	width:400;
+	height:400; 
+
+	floorplanImageStyleName: "floorplanImageStyle";	
+	pinsStyleName: "floorplanPinStyle";
+}
+.floorplanContainer {
+	backgroundAlpha: 0.90;
+	backgroundColor: #FF0000;
+	borderAlpha: 1;
+	horizontalGap: 0;
+	paddingRight: 5;
+	paddingTop: 5;
+	paddingBottom: 5;
+	paddingLeft: 5;
+	
+	borderThickness: 1;	
+}
+PanoSaladoFloorplanToggleButton {
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/floorplan.png");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/floorplan.png");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/floorplan.png");
+	selectedUpIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/floorplan.png");
+	selectedDownIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/floorplan.png");
+	selectedOverIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/floorplan.png");
+		
+	weight:5;
+}
+PanoSaladoFloorplanPin {
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	icon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	selectedUpIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	selectedDownIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	selectedOverIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/pin_asterisk_orange.png");
+	
+	cornerRadius: 0;
+	
+	fillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    fillAlphas: 0, 0, 0, 0;
+
+	overFillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    overFillAlphas: 0, 0, 0, 0;
+	selectedFillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    selectedFillAlphas: 0, 0, 0, 0;
+	verticalGap: 0;
+	highlightAlphas: 0, 0 ;
+	
+	rollOverEffect: ClassReference( "mx.effects.Glow" );	
+}
+.floorplanImageStyle {
+		
+}
+.floorplanPinStyle {
+	
+}
+/* COMBOBOX (comboContainer included for styling width of combobox) */
+PanoSaladoComboBox {
+    cornerRadius: 0;
+   color: #333333;
+   borderColor: #FFFFFF;
+   iconColor: #333333;
+   highlightAlphas: 0, 0;
+   fillAlphas: 0, 0, 0, 0;
+   fillColors: #ffffff, #ffffff, #ffffff, #ffffff;
+   arrowButtonWidth: 16;
+   backgroundAlpha: 0;
+   selectionColor: #cccccc;
+   textSelectedColor: #333333;
+   useRollOver: false;
+   rollOverColor: #cccccc;
+   textRollOverColor: #333333;
+   themeColor: #cccccc;
+   alternatingItemColors: #ffffff, #ffffff;
+   openDuration: 250;
+   closeDuration: 250;
+   textAlign: left;
+   fontFamily: Arial Narrow Embedded;
+   fontSize: 11;
+   fontWeight: normal; 
+   	dropdownStyleName: "PanoSaladoComboBoxDropDowns";
+	borderThickness: 0;
+	focusAlpha: 0;
+	letterSpacing: 2;
+	kerning: true;
+}
+.PanoSaladoComboBoxDropDowns {
+   cornerRadius: 0;
+   borderThickness: 0;
+   letterSpacing: 2;
+   borderColor: #ffffff;
+   color: #333333;
+   textAlign: left;
+   fontFamily: Arial Narrow Embedded;
+   fontSize: 11;
+   fontWeight: bold;
+   fontStyle: normal;
+   textDecoration: none;
+   dropShadowEnabled: true;
+   shadowDirection: center;
+   shadowDistance: 2;
+   dropShadowColor: #000000;
+}
+.comboContainer {
+	backgroundAlpha: 0;
+	backgroundColor: #FFFFFF;
+	borderAlpha: 0;
+	horizontalGap: 0;
+	paddingRight: 0;
+	paddingTop: 0;
+	paddingBottom: 0;
+	paddingLeft: 0;
+	borderThickness: 0;
+	
+	width: 150;
+	height:15; 
+	 
+	weight:5;	
+}
+
+/* NEXT / PREVIOUS */
+PanoSaladoNextButton {
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/next.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/next.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/next.gif");
+	icon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/next.gif");
+}
+PanoSaladoPreviousButton {
+	upIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/previous.gif");
+	downIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/previous.gif");
+	overIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/previous.gif");
+	icon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/previous.gif");
+}
+
+PanoSaladoLinearController {
+	weight:5;
+}
+/* END NAVIGATION ELEMENTS */
+
+/* COPYRIGHT (LABEL) */
+PanoSaladoCopyright {
+	
+}
+/* COPYRIGHT (BUTTON) */
+PanoSaladoCopyrightButton {
+  	cornerRadius: 0;
+	borderAlpha: 0;
+	borderColors: #FFFFFF, #FFFFFF;
+    overBorderColors: #FFFFFF, #FFFFFF;
+    selectedBorderColors: #FFFFFF, #FFFFFF;
+    borderThickness: 2;
+	fillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    fillAlphas: 0.4, 0.4, 0.4, 0.4;
+	/* themeColor: #c1c5bb; */
+	overFillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    overFillAlphas: 0.9, 0.9, 0.9, 0.9;
+	selectedFillColors: #FFFFFF, #FFFFFF, #FFFFFF, #FFFFFF;
+    selectedFillAlphas: 0.9, 0.9, 0.9, 0.9;
+    
+	verticalGap: 0;
+	highlightAlphas: 0, 0 ;
+	
+	textRollOverColor: #000000;
+	
+	fontFamily: Arial Narrow Embedded;
+	fontWeight: normal;
+	color: #333333;
+	fontSize: 10;
+	kerning: true;
+	letterSpacing: 2;
+	bottom: 40;
+	left: -5;
+	textAlign: center;
+}
+
+/* CONTROL BAR */
+/* controlbar includes control bar, .selector to control width, .selector for spacer inside control bar. */
+PanoSaladoControlBar {
+	bottom: 10;
+	right: 0;
+	backgroundAlpha: 0.90;
+	backgroundColor: #FFFFFF;
+	borderAlpha: 0;
+	horizontalGap: 0;
+	paddingRight: 5;
+	paddingTop: 0;
+	paddingBottom: 0;
+	paddingLeft: 5;
+	verticalAlign: middle; 
+	borderThickness: 0;
+}
+.panoSaladoControlBar {
+	percent-width: 100;
+	/* height:22; */
+	direction:horizontal;
+	horizontalAlign:right;
+}
+ .controlBarSpacer {
+	percent-width: 100;
+} 
+/* if using a second, inner controlbar to group things */
+.panoSaladoInnerControlBar {
+	cornerRadius: 5;
+	backgroundAlpha: .5;
+	backgroundColor: #333333;
+	borderAlpha: 0; 
+	horizontalGap: 2;
+	paddingRight: 5;
+	paddingTop: 5;
+	paddingBottom: 5;
+	paddingLeft: 5;
+	horizontalAlign: left;
+	verticalAlign: middle;	
+}
+
+/* PanoSaladoEnhancedButton */
+/* affects all Buttons, unless overriden in individual selector or .selector */
+PanoSaladoEnhancedButton {	
+	cornerRadius: 0;
+	borderThickness: 0;
+	verticalGap: 0;
+	fillAlphas: 0, 0 ;
+	highlightAlphas: 0, 0 ;
+	borderAlpha: 0;
+	borderColor: #000000;
+	fillColors: #c1c5bb, #333333;
+	themeColor: #c1c5bb;
+	overFillColors: #333333, #333333, #333333, #333333;
+    overFillAlphas: 0.2, 0.2, 0.2, 0.2;
+    overFillColorRatios: 0, 85, 170, 255;
+	selectedFillColors: #333333, #333333;
+	selectedFillAlphas: 0.2, 0.2;
+	selectedFillColorRatios: 0, 255;
+	focusRoundedCorners: 0;
+	paddingLeft: 6;
+	paddingRight: 6;
+	paddingBottom: 6;
+	paddingTop: 6;  
+	
+	fontFamily: Arial Narrow Embedded;
+	fontWeight: normal;
+	fontSize: 10;
+	kerning: true;
+	letterSpacing: 2;
+	color: #333333;
+	themeColor: #333333;
+}
+
+/* VIDEO */
+PanoSaladoVideo { 
+width:480;
+height:360;
+
+backColor:#000000;
+frontColor:#333333;
+controlBarHeight:12;
+timerFontName:Arial;
+timerFontSize:9;
+
+bottom:40;
+left:10;
+/* videoStyleName: "videoComponent"; */
+}
+FXVideo {
+autoPlay:false;
+bufferTime:10;
+		
+width:480;
+height:360;
+
+backColor:#000000;
+frontColor:#333333;
+controlBarHeight:12;
+timerFontName:Arial;
+timerFontSize:9;
+	
+}
+
+PanoSaladoVideoToggleButton {
+	weight:35;
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/filmstrip.png");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/filmstrip.png");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/filmstrip.png");
+	selectedUpIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/filmstrip.png");
+	selectedDownIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/filmstrip.png");
+	selectedOverIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/filmstrip.png");
+}
+
+PanoSaladoAudioToggleButton {
+	weight:35;
+	
+	upIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/audio_off.gif");
+	downIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/audio.gif");
+	overIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/audio.gif");
+	selectedUpIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/audio.gif");
+	selectedDownIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/audio_off.gif");
+	selectedOverIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/audio_off.gif");
+}
+
+/* CAPTION (LABEL) */
+PanoSaladoCaption {
+ 	paddingLeft: 3;
+	paddingRight: 3;
+	paddingBottom: 3;
+	paddingTop: 3;  
+	/* textRollOverColor: #000000; */
+	fontFamily: Arial Narrow Embedded;
+	fontWeight: normal;
+	color: #333333;
+	fontSize: 10;
+	kerning: true;
+	letterSpacing: 2;
+	bottom: 100;
+	right: 10;	
+	
+	weight:10;
+}
+
+/* 	ALL OTHER USUAL SUSPECT COMPONENTS */
+PanoSaladoNavigateToURLToggleButton {
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/image.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/image.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/image.gif");
+	selectedUpIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/image.gif");
+	selectedDownIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/image.gif");
+	selectedOverIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/image.gif");
+}
+
+PanoSaladoAutorotateToggleButton {
+	weight:30;
+	upIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/autorotate.gif");
+	downIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/autorotate.gif");
+	overIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/autorotate.gif");
+	selectedUpIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/autorotate.gif");
+	selectedDownIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/autorotate.gif");
+	selectedOverIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/autorotate.gif");
+}
+PanoSaladoPanLeftButton {
+	upIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/left.gif");
+	downIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/left.gif");
+	overIcon: Embed("commercial/flexinterfaces/elements/graphics/mini_mini/left.gif");
+	
+	weight:20;
+}
+PanoSaladoPanRightButton {
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/right.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/right.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/right.gif");
+	
+	weight:20;
+}
+PanoSaladoTiltUpButton {
+	weight:20;
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/up.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/up.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/up.gif");
+}
+PanoSaladoTiltDownButton {
+	weight:20;
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/down.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/down.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/down.gif");
+}
+PanoSaladoZoomInButton {
+	weight:20;
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/zoomin.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/zoomin.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/zoomin.gif");
+}
+PanoSaladoZoomOutButton {
+	weight:20;
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/zoomout.gif");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/zoomout.gif");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/zoomout.gif");
+}
+PanoSaladoFullscreenToggleButton {
+	weight:40;
+	upIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/fullscreen.png");
+	downIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/fullscreen.png");
+	overIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/fullscreen.png");
+	selectedUpIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/normalscreen.png");
+	selectedDownIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/normalscreen.png");
+	selectedOverIcon:Embed("commercial/flexinterfaces/elements/graphics/mini_mini/normalscreen.png");
+}
+/*
+//------------------------------
+//  HScrollBar
+//------------------------------
+*/
+HScrollBar
+{
+    upArrowSkin:  ClassReference(null);
+	downArrowSkin:  ClassReference(null);
+}
+HSlider
+{
+	dataTipOffset: 5;
+}
+
+/*
+//------------------------------
+//  VScrollBar
+//------------------------------
+*/
+VScrollBar
+{
+}
+VSlider
+{
+	dataTipOffset: 5;
+}

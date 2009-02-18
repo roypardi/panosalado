@@ -13,7 +13,7 @@
 	autoLayout="true"
 	>
 	
-	<mx:Script source="VideoWarpPlayer.as" />	
+	<mx:Script source="com/eyesee360/VideoWarpPlayer.as" />	
 	<mx:Style source="styles/VideoWarpPlayerStyle.css" />
 	
 	<mx:XMLList id="menuTree">
