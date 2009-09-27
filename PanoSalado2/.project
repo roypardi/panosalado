@@ -10,8 +10,18 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>com.joa_ebert.PBDT.builder</name>
+			<arguments>
+				<dictionary>
+					<key>output</key>
+					<value>pbj</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
+		<nature>com.joa_ebert.PBDT.nature</nature>
 	</natures>
 </projectDescription>

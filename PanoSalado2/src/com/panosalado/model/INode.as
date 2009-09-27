@@ -1,6 +1,8 @@
 package com.panosalado.model
 {
-	public interface INode
+	import flash.events.IEventDispatcher;
+	
+	public interface INode extends IEventDispatcher
 	{
 		
 	}
