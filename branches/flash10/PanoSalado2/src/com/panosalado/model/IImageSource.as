@@ -2,12 +2,14 @@ package com.panosalado.model
 {
 	import com.eyesee360.geometry.IProjection;
 	
-	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.events.IEventDispatcher;
 	
-	public interface IImageSource
+	public interface IImageSource extends IEventDispatcher
 	{
-		public function get bitmapData():BitmapData;
-		public function get projection():IProjection;
-		public function get loadProgress():Number;
+		function get bitmapData():BitmapData;
+		function get projection():IProjection;
+		function get loadProgress():Number;
+		function get suggestedRefreshInterval():Number;
 	}
 }

@@ -6,30 +6,35 @@ package com.eyesee360.geometry
 	import flash.utils.Proxy;
 	import flash.utils.flash_proxy;
 	
-	dynamic public class Projection extends Proxy, IProjection
+	dynamic public class Projection extends Proxy implements IProjection
 	{
-		public const EQUIRECTANGULAR = "equirectangular";
-		public const CYLINDRICAL = "cylindrical";
-		public const RECTILINEAR = "rectilinear";
+		public static const EQUIRECTANGULAR:String = "equirectangular";
+		public static const CYLINDRICAL:String = "cylindrical";
+		public static const RECTILINEAR:String = "rectilinear";
 		
-		private const D2R = Math.PI/180.0;
-		private const R2D = 180.0/Math.PI;
+		private static const D2R:Number = Math.PI/180.0;
+		private static const R2D:Number = 180.0/Math.PI;
 		private var _data:Object;
 		
 		// Factory
 		public static function projectionFromJSON(json:String):Projection
 		{
-			var projData:Object = JSON.decode(json);
-			return new Projection(projData);
+			try {
+				var projData:Object = JSON.decode(json);
+				return new Projection(projData);
+			} catch (e:Error) {
+				trace(e);
+			}
+			return null;
 		}
 		
 		// Factory
 		public static function guessProjectionFromBitmapData(bitmapData:BitmapData):Projection
 		{
 			var data:Object;
-			if (bitmapData.width = 2*bitmapData.height) {
+			if (bitmapData.width == 2*bitmapData.height) {
 				// guess equirectangular (full sphere)
-				data = { type:EQUIRECTANGULAR, bounds:[-180.0, -90.0, 360.0, 180.0] };
+				data = { type:EQUIRECTANGULAR, bounds:[0.0, -90.0, 360.0, 180.0] };
 			} else {
 				// guess cylindrical, centered on horizon
 				var radius:Number = bitmapData.width / (2*Math.PI);
@@ -40,7 +45,7 @@ package com.eyesee360.geometry
 			return proj;
 		}
 
-		private function Projection(data:Object)
+		public function Projection(data:Object)
 		{
 			_data = data;
 		}
@@ -50,14 +55,19 @@ package com.eyesee360.geometry
 			return _data.type;
 		}
 		
-		public function get boundsRad():Array
+		public function get bounds():Array
 		{
-			var boundsDeg:* = this.bounds;
-			var boundsRad = [
+			var boundsDeg:Array = _data.bounds;
+			var boundsRad:Array = [
 				boundsDeg[0] * D2R, boundsDeg[1] * D2R,
 				boundsDeg[2] * D2R, boundsDeg[3] * D2R
-			;
+			];
 			return boundsRad;
+		}
+		
+		public function get boundsDeg():Array
+		{
+			return _data.bounds;
 		}
 		
 	    override flash_proxy function getProperty(name:*):* 
